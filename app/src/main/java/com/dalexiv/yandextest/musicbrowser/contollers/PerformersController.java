@@ -16,6 +16,9 @@ import java.util.List;
 /**
  * Created by dalexiv on 4/24/16.
  */
+/*
+    Encapsulates logic of generating and setting data at MainActivity
+ */
 public class PerformersController extends BaseController{
     private List<Performer> dataset;
 

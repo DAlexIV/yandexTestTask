@@ -7,10 +7,15 @@ import com.dalexiv.yandextest.musicbrowser.R;
 /**
  * Created by dalexiv on 4/24/16.
  */
+/*
+    Base class for both activity contollers
+    Encapsulates logic of generating and setting data
+ */
 public class BaseController {
+    // Refernce to acitivty
     protected Context context;
 
-    // Constants
+    // Constants from context
     protected String[] albumsEnding;
     protected String[] tracksEnding;
 

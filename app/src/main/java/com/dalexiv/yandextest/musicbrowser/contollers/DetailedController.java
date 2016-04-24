@@ -9,6 +9,9 @@ import java.util.Arrays;
 /**
  * Created by dalexiv on 4/24/16.
  */
+/*
+    Encapsulates logic of generating and setting data at DetailedActivity
+ */
 public class DetailedController extends BaseController{
     private Performer performer;
 
