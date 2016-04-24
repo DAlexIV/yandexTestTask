@@ -1,6 +1,6 @@
 package com.dalexiv.yandextest.musicbrowser;
 
-import com.dalexiv.yandextest.musicbrowser.contoller.PerformersController;
+import com.dalexiv.yandextest.musicbrowser.contollers.EndingBuilder;
 
 import org.junit.Test;
 
@@ -11,14 +11,14 @@ public class PerformersControllerUnitTest {
     @Test
     public void endingsTest1() throws Exception {
         for (int i = 0; i < 100; ++i)
-            System.out.println(i + " " + PerformersController.buildEnding(i,
+            System.out.println(i + " " + EndingBuilder.buildEnding(i,
                     new String[] {"альбом", "альбома", "альбомов"}));
     }
 
     @Test
     public void endingsTest2() throws Exception {
         for (int i = 0; i < 100; ++i)
-            System.out.println(i + " " + PerformersController.buildEnding(i,
+            System.out.println(i + " " + EndingBuilder.buildEnding(i,
                     new String[] {"песня", "песни", "песен"}));
     }
 }

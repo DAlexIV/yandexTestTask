@@ -1,19 +1,22 @@
 package com.dalexiv.yandextest.musicbrowser.ui.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.dalexiv.yandextest.musicbrowser.R;
-import com.dalexiv.yandextest.musicbrowser.contoller.PerformersAdapter;
+import com.dalexiv.yandextest.musicbrowser.PerformersAdapter;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 import com.dalexiv.yandextest.musicbrowser.retro.IPerformer;
 import com.dalexiv.yandextest.musicbrowser.retro.RetrofitHolder;
 import com.dalexiv.yandextest.musicbrowser.ui.DividerItemDecoration;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -61,10 +64,7 @@ public class MainActivity extends RxAppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerPerfs);
 
         configureRecyclerViewAndAdapter();
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            pAdapter.clearPerformers();
-            loadFromNetworkOnly();
-        });
+        setupSwipeToRefresh();
 
         iPerformer = RetrofitHolder.getRetrofit()
                 .create(IPerformer.class);
@@ -73,8 +73,21 @@ public class MainActivity extends RxAppCompatActivity {
         loadFromCacheAndNetwork();
     }
 
+    private void setupSwipeToRefresh() {
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            pAdapter.clearPerformers();
+            loadFromNetworkOnly();
+        });
+
+        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimary),
+                Color.YELLOW, ContextCompat.getColor(this, R.color.colorAccent));
+    }
+
     private void configureRecyclerViewAndAdapter() {
+        // Initializing adapter
         pAdapter = new PerformersAdapter(MainActivity.this);
+
+        // Configuring recyclerview
         RecyclerView.LayoutManager mLayoutManager
                 = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -93,9 +106,13 @@ public class MainActivity extends RxAppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-//                if (!(e instanceof MissingBackpressureException))
+                if (e instanceof ConnectException)
                     Snackbar.make(mRecyclerView, "No internet connection, swipe to refresh",
                             Snackbar.LENGTH_LONG).show();
+                else
+                    Snackbar.make(mRecyclerView, e.getMessage(), Snackbar.LENGTH_LONG).show();
+
+                // Anyway show that we are done
                 mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
             }
 
