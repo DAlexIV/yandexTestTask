@@ -27,22 +27,32 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/*
+    Activity with performers preview
+ */
 public class MainActivity extends RxAppCompatActivity {
     // Layout
     RecyclerView mRecyclerView;
     SwipeRefreshLayout mSwipeRefreshLayout;
+
     PerformersAdapter pAdapter;
 
     // Retro
     IPerformer iPerformer;
 
-    // Rx
+    // Observer for UI update
     Observer<Performer> showResultObserver;
+
+    // Custom observable for better animation timings
     Observable<Long> custromInterval;
+
+    // Main subsription
     Subscription netCall;
 
-    // Cache
+    // Observable with cache
     Observable<ArrayList<Performer>> cacheObservable;
+
+    // Cache for saving
     ArrayList<Performer> cache;
 
     @Override
@@ -60,12 +70,14 @@ public class MainActivity extends RxAppCompatActivity {
         else
             cacheObservable = Observable.empty();
 
+        // Initializing views (Butterknife for wimps)
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerPerfs);
 
         configureRecyclerViewAndAdapter();
         setupSwipeToRefresh();
 
+        // Creating retrofit interface
         iPerformer = RetrofitHolder.getRetrofit()
                 .create(IPerformer.class);
 
@@ -74,6 +86,7 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void setupSwipeToRefresh() {
+        // Clearing old data and loading new one from network
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             pAdapter.clearPerformers();
             loadFromNetworkOnly();
@@ -109,7 +122,7 @@ public class MainActivity extends RxAppCompatActivity {
                 if (e instanceof ConnectException)
                     Snackbar.make(mRecyclerView, "No internet connection, swipe to refresh",
                             Snackbar.LENGTH_LONG).show();
-                else
+                else // In some unpredictable case
                     Snackbar.make(mRecyclerView, e.getMessage(), Snackbar.LENGTH_LONG).show();
 
                 // Anyway show that we are done
@@ -126,11 +139,11 @@ public class MainActivity extends RxAppCompatActivity {
         };
 
         custromInterval = Observable.interval(100, TimeUnit.MILLISECONDS).flatMap(time -> {
-            if (time < 10)
+            if (time < 10) // Take first 10 with 100 ms interval
                 return Observable.just(time);
-            else if (time == 10)
+            else if (time == 10) // Then emit others almost as one
                 return Observable.interval(1, TimeUnit.MILLISECONDS);
-            else
+            else // Finally, just return nothing
                 return Observable.empty();
         });
     }
@@ -138,12 +151,16 @@ public class MainActivity extends RxAppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        // Saving cache
         outState.putParcelableArrayList("cache", cache);
     }
 
     private void loadFromCacheAndNetwork() {
+        // Show that we are loading smthing
         mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
 
+        // Rx magic goes there
         netCall = Observable.zip(cacheObservable.switchIfEmpty(Observable.defer(()
                         -> iPerformer.getPerformers())).flatMap(Observable::from),
                 custromInterval, (data, delay) -> data)
@@ -155,7 +172,10 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void loadFromNetworkOnly() {
+        // Show that we are loading smthing
         mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+
+        // Another sort of Rx magic
         netCall = Observable.zip(iPerformer.getPerformers().flatMap(Observable::from),
                 custromInterval, (data, delay) -> data)
                 .compose(bindToLifecycle())

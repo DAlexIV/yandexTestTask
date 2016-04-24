@@ -14,6 +14,9 @@ import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 /**
  * Created by dalexiv on 4/21/16.
  */
+/*
+    Adapter for recyclerview in MainActivity
+ */
 public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.ViewHolder> {
     PerformersController controller;
 
@@ -30,16 +33,23 @@ public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        // Just redirect call to controller
         controller.fillWithData(holder, position);
     }
 
     public void addPerformer(Performer performer) {
+        // Just redirect call to controller
         controller.addPerfromer(performer);
+
+        // Notify about added element
         notifyItemInserted(controller.getDataset().size());
     }
 
     public void clearPerformers() {
+        // Just redirect call to controller
         controller.clearPerformers();
+
+        // Notify about removed elements
         notifyDataSetChanged();
     }
 
@@ -48,6 +58,9 @@ public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.Vi
         return controller.getDataset().size();
     }
 
+    /*
+        Performer's viewModel
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
         public TextView mTextViewName;

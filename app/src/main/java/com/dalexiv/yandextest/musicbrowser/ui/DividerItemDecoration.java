@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Created by dalexiv on 4/22/16.
+ * That isn't my thing, really
  */
 /*
  * Copyright (C) 2014 The Android Open Source Project

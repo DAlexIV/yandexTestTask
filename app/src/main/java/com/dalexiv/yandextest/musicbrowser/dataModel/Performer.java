@@ -6,6 +6,9 @@ import android.os.Parcelable;
 /**
  * Created by dalexiv on 4/21/16.
  */
+/*
+    Data class for performer
+ */
 public class Performer implements Parcelable{
     private int id;
     private String name;

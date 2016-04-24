@@ -12,8 +12,11 @@ import com.dalexiv.yandextest.musicbrowser.R;
 import com.dalexiv.yandextest.musicbrowser.contollers.DetailedController;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 import com.squareup.picasso.Picasso;
-
+/*
+    Activity with detailed data about selected performer
+ */
 public class DetailedActivity extends AppCompatActivity {
+    // References to view
     ImageView mImageArtist;
     TextView mTextGenres;
     TextView mTextStats;
@@ -25,36 +28,50 @@ public class DetailedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed);
+
+        // Initializing toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Initializing views (Butterknife for wimps)
         mImageArtist = (ImageView) findViewById(R.id.imageView);
         mTextGenres = (TextView) findViewById(R.id.perfGenre);
         mTextStats = (TextView) findViewById(R.id.perfStats);
         mTextDescription = (TextView) findViewById(R.id.perfDesc);
 
+        // Getting the performet from intent
         performer = getIntent().getParcelableExtra("performer");
 
+        // If it's null, basically inform the user
         if (performer == null) {
             Toast.makeText(this, "No performer given", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Initializing controller with received performer
         controller = new DetailedController(performer, this);
 
-        Picasso.with(this)
-                .load(performer.getCover().getBig())
-                .into(mImageArtist);
-        mTextGenres.setText(controller.generateGenres());
-        mTextStats.setText(controller.generateStats());
-        mTextDescription.setText(controller.generateDescription());
+        fillAcvitiyWithData();
 
-
+        // Configuring actionbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(performer.getName());
         }
     }
+
+    private void fillAcvitiyWithData() {
+        // Loading big image
+        Picasso.with(this)
+                .load(performer.getCover().getBig())
+                .into(mImageArtist);
+
+        // Setting various text views
+        mTextGenres.setText(controller.generateGenres());
+        mTextStats.setText(controller.generateStats());
+        mTextDescription.setText(controller.generateDescription());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -62,7 +79,6 @@ public class DetailedActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             finish();
             return true;

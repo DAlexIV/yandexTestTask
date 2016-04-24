@@ -9,6 +9,10 @@ import retrofit2.RxJavaCallAdapterFactory;
 /**
  * Created by dalexiv on 4/21/16.
  */
+
+/*
+    Singleton, which initializes and holds retrofit object throughout entire app
+ */
 public class RetrofitHolder {
     private static volatile Retrofit retro;
 

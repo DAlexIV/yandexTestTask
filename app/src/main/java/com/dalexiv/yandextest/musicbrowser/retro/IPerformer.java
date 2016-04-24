@@ -11,6 +11,9 @@ import rx.Observable;
 /**
  * Created by dalexiv on 4/22/16.
  */
+/*
+    Retrofit2 interface for downloading performers
+ */
 public interface IPerformer {
     @GET("artists.json")
     @Headers({"Content-Type: application/json"})

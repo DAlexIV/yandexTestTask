@@ -6,6 +6,9 @@ import android.os.Parcelable;
 /**
  * Created by dalexiv on 4/21/16.
  */
+/*
+    Data class for cover
+ */
 public class Cover implements Parcelable {
     private String small;
     private String big;
