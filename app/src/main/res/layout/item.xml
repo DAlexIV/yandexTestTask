@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    android:orientation="horizontal"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="15dp"
+    android:weightSum="6">
+
+    <ImageView
+        android:id="@+id/performerImage"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="4"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/performerName"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/performerGenre"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_below="@id/performerName"
+            android:textColor="@color/grey" />
+
+        <TextView
+            android:id="@+id/performerStats"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/grey" />
+
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MusicBrowser</string>
+    <string-array name="albums">
+        <item>альбом</item>
+        <item>альбома</item>
+        <item>альбомов</item>
+    </string-array>
+
+    <string-array name="tracks">
+        <item>песня</item>
+        <item>песни</item>
+        <item>песен</item>
+    </string-array>
+    <string name="title_activity_detailed">DetailedActivity</string>
+</resources>
