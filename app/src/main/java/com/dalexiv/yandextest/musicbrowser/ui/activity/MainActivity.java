@@ -55,6 +55,10 @@ public class MainActivity extends RxAppCompatActivity {
     // Cache for saving
     ArrayList<Performer> cache;
 
+    // Constants
+    private final long ANIMATION_DURATION = 750;
+    private final int NUMBER_OF_ANIMATED_ITEMS = 5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,10 +142,13 @@ public class MainActivity extends RxAppCompatActivity {
             }
         };
 
-        custromInterval = Observable.interval(100, TimeUnit.MILLISECONDS).flatMap(time -> {
-            if (time < 10) // Take first 10 with 100 ms interval
+        // Calculating animation values
+        long ITEM_ANIMATION_DURATION = ANIMATION_DURATION / NUMBER_OF_ANIMATED_ITEMS;
+
+        custromInterval = Observable.interval(ITEM_ANIMATION_DURATION, TimeUnit.MILLISECONDS).flatMap(time -> {
+            if (time < NUMBER_OF_ANIMATED_ITEMS) // Take first with animation interval
                 return Observable.just(time);
-            else if (time == 10) // Then emit others almost as one
+            else if (time == NUMBER_OF_ANIMATED_ITEMS) // Then emit others almost as one
                 return Observable.interval(1, TimeUnit.MILLISECONDS);
             else // Finally, just return nothing
                 return Observable.empty();
@@ -161,8 +168,9 @@ public class MainActivity extends RxAppCompatActivity {
         mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
 
         // Rx magic goes there
-        netCall = Observable.zip(cacheObservable.switchIfEmpty(Observable.defer(()
-                        -> iPerformer.getPerformers())).flatMap(Observable::from),
+        netCall = Observable.zip(cacheObservable
+                        .switchIfEmpty(Observable.defer(() -> iPerformer.getPerformers()))
+                        .flatMap(Observable::from),
                 custromInterval, (data, delay) -> data)
                 .compose(bindToLifecycle())
                 .onBackpressureBuffer()
@@ -175,8 +183,9 @@ public class MainActivity extends RxAppCompatActivity {
         // Show that we are loading smthing
         mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
 
-        // Another sort of Rx magic
-        netCall = Observable.zip(iPerformer.getPerformers().flatMap(Observable::from),
+        // Another sort of Rx magic (without cache)
+        netCall = Observable.zip(iPerformer.getPerformers()
+                        .flatMap(Observable::from),
                 custromInterval, (data, delay) -> data)
                 .compose(bindToLifecycle())
                 .onBackpressureBuffer()

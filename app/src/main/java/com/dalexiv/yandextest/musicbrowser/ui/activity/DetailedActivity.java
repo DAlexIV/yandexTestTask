@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,10 @@ public class DetailedActivity extends AppCompatActivity {
     TextView mTextGenres;
     TextView mTextStats;
     TextView mTextDescription;
+    TextView mTextLink;
+    LinearLayout mLinearLayout;
+
+    // Current performer
     Performer performer;
 
     DetailedController controller;
@@ -34,12 +39,14 @@ public class DetailedActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Initializing views (Butterknife for wimps)
+        mLinearLayout = (LinearLayout) findViewById(R.id.linearContainer);
         mImageArtist = (ImageView) findViewById(R.id.imageView);
         mTextGenres = (TextView) findViewById(R.id.perfGenre);
         mTextStats = (TextView) findViewById(R.id.perfStats);
         mTextDescription = (TextView) findViewById(R.id.perfDesc);
+        mTextLink = (TextView) findViewById(R.id.perfLink);
 
-        // Getting the performet from intent
+        // Getting the performer from intent
         performer = getIntent().getParcelableExtra("performer");
 
         // If it's null, basically inform the user
@@ -70,6 +77,13 @@ public class DetailedActivity extends AppCompatActivity {
         mTextGenres.setText(controller.generateGenres());
         mTextStats.setText(controller.generateStats());
         mTextDescription.setText(controller.generateDescription());
+
+        // Optional link
+        if (performer.getLink() == null) {
+            mLinearLayout.removeView(mTextLink);
+        } else {
+            mTextLink.setText(controller.generateLink());
+        }
     }
 
     @Override

@@ -40,6 +40,16 @@ public class MainActivityTest extends ApplicationTestCase<Application> {
     @Test
     public void testRotation() {
         onView(isRoot()).perform(orientationLandscape());
+
+        // Waiting 3 sec
+        try {
+            Thread.sleep(3000);
+        }
+        catch (InterruptedException ex) {
+
+        }
+
+        // Check if everything is displaying
         testFetching();
     }
 

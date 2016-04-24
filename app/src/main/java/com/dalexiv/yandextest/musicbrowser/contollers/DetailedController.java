@@ -12,7 +12,7 @@ import java.util.Arrays;
 /*
     Encapsulates logic of generating and setting data at DetailedActivity
  */
-public class DetailedController extends BaseController{
+public class DetailedController extends BaseController {
     private Performer performer;
 
     public DetailedController(Performer performer, Context context) {
@@ -31,5 +31,9 @@ public class DetailedController extends BaseController{
 
     public String generateDescription() {
         return performer.getName() + " – " + performer.getDescription();
+    }
+
+    public String generateLink() {
+            return "Узнайте больше на\n " + performer.getLink();
     }
 }
