@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/perfGenre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionName="genre"
+        android:textColor="@color/grey"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+    <TextView
+        android:id="@+id/perfStats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionName="stats"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/grey"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+    <TextView
+        android:id="@+id/perfName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:text="@string/content_header"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
+
+    <TextView
+        android:id="@+id/perfDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginTop="5dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
+
+    <TextView
+        android:id="@+id/perfLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:autoLink="web"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+</LinearLayout>

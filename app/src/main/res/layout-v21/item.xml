@@ -43,6 +43,7 @@
             android:id="@+id/performerGenre"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:transitionName="genre"
             android:layout_weight="2"
             android:textColor="@color/grey" />
 
@@ -56,6 +57,7 @@
             android:id="@+id/performerStats"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:transitionName="stats"
             android:gravity="bottom"
             android:layout_weight="2"
             android:textColor="@color/grey" />

@@ -94,7 +94,7 @@ public class DetailedActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            finish();
+            supportFinishAfterTransition();
             return true;
         }
 

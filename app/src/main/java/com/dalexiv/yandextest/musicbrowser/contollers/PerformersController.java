@@ -1,7 +1,10 @@
 package com.dalexiv.yandextest.musicbrowser.contollers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.dalexiv.yandextest.musicbrowser.PerformersAdapter;
@@ -19,7 +22,7 @@ import java.util.List;
 /*
     Encapsulates logic of generating and setting data at PerformersAdapter
  */
-public class PerformersController extends BaseController{
+public class PerformersController extends BaseController {
     // Current list of performers in adapter
     private List<Performer> dataset;
 
@@ -31,7 +34,8 @@ public class PerformersController extends BaseController{
 
     /**
      * Fills performer's ViewHolder with data
-     * @param holder performer's ViewHolder
+     *
+     * @param holder   performer's ViewHolder
      * @param position index of that ViewHolder
      */
     public void fillWithData(PerformersAdapter.ViewHolder holder, int position) {
@@ -49,15 +53,16 @@ public class PerformersController extends BaseController{
                 performer.getTracks(), ", ", albumsEnding, tracksEnding));
 
         // Setting appropriate OnClickListener
-        holder.itemView.setOnClickListener(bindClickListenerByIndex(position));
+        holder.itemView.setOnClickListener(bindClickListenerByIndex(position, holder));
     }
 
     /**
      * Binds click listener to view
+     *
      * @param index index of bindable view
      * @return generated click listener
      */
-    public View.OnClickListener bindClickListenerByIndex(int index) {
+    public View.OnClickListener bindClickListenerByIndex(int index, PerformersAdapter.ViewHolder holder) {
         // Handling corner cases
         if (index < 0 && index >= dataset.size())
             throw new IllegalArgumentException("Index is out of bound in adapter within RecyclerView");
@@ -66,7 +71,14 @@ public class PerformersController extends BaseController{
         return v -> {
             Intent intent = new Intent(context, DetailedActivity.class);
             intent.putExtra("performer", dataset.get(index));
-            context.startActivity(intent);
+
+            // Adding various transition options
+            ActivityOptionsCompat options
+                    = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,
+                    new Pair<>(holder.mImageView, "picture"),
+                    new Pair<>(holder.mTextViewGenre, "genre"),
+                    new Pair<>(holder.mTextViewStats, "stats"));
+            context.startActivity(intent, options.toBundle());
         };
     }
 
