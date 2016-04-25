@@ -17,6 +17,7 @@ import com.dalexiv.yandextest.musicbrowser.ui.DividerItemDecoration;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -127,8 +128,11 @@ public class MainActivity extends RxAppCompatActivity {
                 if (e instanceof ConnectException || e instanceof UnknownHostException)
                     Snackbar.make(mRecyclerView, "No internet connection, swipe to refresh",
                             Snackbar.LENGTH_LONG).show();
+                if (e instanceof SocketTimeoutException)
+                    Snackbar.make(mRecyclerView, "Connection is a little bit slow, swipe to refresh",
+                            Snackbar.LENGTH_LONG).show();
                 else // In some unpredictable case
-                    Snackbar.make(mRecyclerView, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mRecyclerView, e.toString(), Snackbar.LENGTH_LONG).show();
 
                 // Anyway show that we are done
                 mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));

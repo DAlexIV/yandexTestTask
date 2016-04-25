@@ -12,6 +12,7 @@ import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 import com.dalexiv.yandextest.musicbrowser.ui.activity.DetailedActivity;
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,9 +43,9 @@ public class PerformersController extends BaseController {
         Performer performer = dataset.get(position);
 
         // Loading preview image
-        Picasso.with(context)
+        Picasso.with(context.get())
                 .load(performer.getCover().getSmall())
-                .placeholder(android.R.drawable.ic_media_pause)
+//                .placeholder(R.drawable.placeholder)
                 .into(holder.mImageView);
 
         // Setting various text fields
@@ -70,16 +71,16 @@ public class PerformersController extends BaseController {
 
         // If everything OK, then return click listener
         return v -> {
-            Intent intent = new Intent(context, DetailedActivity.class);
+            Intent intent = new Intent(context.get(), DetailedActivity.class);
             intent.putExtra("performer", dataset.get(index));
 
             // Adding various transition options
             ActivityOptionsCompat options
-                    = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,
+                    = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context.get(),
                     new Pair<>(holder.mImageView, "picture"),
                     new Pair<>(holder.mTextViewGenre, "genre"),
                     new Pair<>(holder.mTextViewStats, "stats"));
-            context.startActivity(intent, options.toBundle());
+            context.get().startActivity(intent, options.toBundle());
         };
     }
 
@@ -100,10 +101,10 @@ public class PerformersController extends BaseController {
     }
 
     public Context getContext() {
-        return context;
+        return context.get();
     }
 
     public void setContext(Context context) {
-        this.context = context;
+        this.context = new WeakReference<>(context);
     }
 }
