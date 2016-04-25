@@ -71,6 +71,7 @@ public class DetailedActivity extends AppCompatActivity {
         // Loading big image
         Picasso.with(this)
                 .load(performer.getCover().getBig())
+                .placeholder(android.R.drawable.ic_media_pause)
                 .into(mImageArtist);
 
         // Setting various text views

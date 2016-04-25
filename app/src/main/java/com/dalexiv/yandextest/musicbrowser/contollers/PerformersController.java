@@ -44,6 +44,7 @@ public class PerformersController extends BaseController {
         // Loading preview image
         Picasso.with(context)
                 .load(performer.getCover().getSmall())
+                .placeholder(android.R.drawable.ic_media_pause)
                 .into(holder.mImageView);
 
         // Setting various text fields

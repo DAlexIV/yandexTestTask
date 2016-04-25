@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.ApplicationTestCase;
 
 import com.dalexiv.yandextest.musicbrowser.ui.activity.MainActivity;
+import com.dalexiv.yandextest.musicbrowser.util.HelperMethods;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,6 +36,8 @@ public class DetailedActivityTest extends ApplicationTestCase<Application> {
     public void testContent() {
         onView(withId(R.id.recyclerPerfs))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        HelperMethods.wait(3000);
 
         onView(withId(R.id.perfGenre))
                 .check(matches(withText("pop, dance, electronics")));

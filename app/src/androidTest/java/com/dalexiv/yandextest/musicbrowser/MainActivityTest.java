@@ -6,6 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.ApplicationTestCase;
 
 import com.dalexiv.yandextest.musicbrowser.ui.activity.MainActivity;
+import com.dalexiv.yandextest.musicbrowser.util.HelperMethods;
 import com.dalexiv.yandextest.musicbrowser.util.MyMatchers;
 
 import org.junit.Rule;
@@ -34,6 +35,7 @@ public class MainActivityTest extends ApplicationTestCase<Application> {
 
     @Test
     public void testFetching() {
+        HelperMethods.wait(3000);
         onView(withId(R.id.recyclerPerfs)).check(matches(MyMatchers.withListSize(317)));
     }
 
@@ -42,12 +44,8 @@ public class MainActivityTest extends ApplicationTestCase<Application> {
         onView(isRoot()).perform(orientationLandscape());
 
         // Waiting 3 sec
-        try {
-            Thread.sleep(3000);
-        }
-        catch (InterruptedException ex) {
+        HelperMethods.wait(3000);
 
-        }
 
         // Check if everything is displaying
         testFetching();
@@ -55,6 +53,7 @@ public class MainActivityTest extends ApplicationTestCase<Application> {
 
     @Test
     public void testContent() {
+        HelperMethods.wait(3000);
         onView(withId(R.id.recyclerPerfs))
                 .check(matches(hasDescendant(withText("Tove Lo"))));
         onView(withId(R.id.recyclerPerfs))
