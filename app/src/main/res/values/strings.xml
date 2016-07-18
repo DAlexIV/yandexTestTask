@@ -13,4 +13,5 @@
     </string-array>
     <string name="title_activity_detailed">DetailedActivity</string>
     <string name="content_header">Биография</string>
+    <string name="invalidate_caches">Сбросить кэш</string>
 </resources>

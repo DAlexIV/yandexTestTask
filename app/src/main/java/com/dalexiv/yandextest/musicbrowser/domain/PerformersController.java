@@ -1,4 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser.contollers;
+package com.dalexiv.yandextest.musicbrowser.domain;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.view.View;
 
-import com.dalexiv.yandextest.musicbrowser.PerformersAdapter;
+import com.dalexiv.yandextest.musicbrowser.ui.PerformersAdapter;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 import com.dalexiv.yandextest.musicbrowser.ui.activity.DetailedActivity;
 import com.squareup.picasso.Picasso;

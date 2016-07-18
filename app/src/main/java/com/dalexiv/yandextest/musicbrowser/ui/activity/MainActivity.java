@@ -7,13 +7,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.dalexiv.yandextest.musicbrowser.Cache;
 import com.dalexiv.yandextest.musicbrowser.R;
-import com.dalexiv.yandextest.musicbrowser.PerformersAdapter;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-import com.dalexiv.yandextest.musicbrowser.retro.IPerformer;
-import com.dalexiv.yandextest.musicbrowser.retro.RetrofitHolder;
+import com.dalexiv.yandextest.musicbrowser.di.ActivityInjectors;
+import com.dalexiv.yandextest.musicbrowser.net.IPerformer;
 import com.dalexiv.yandextest.musicbrowser.ui.DividerItemDecoration;
+import com.dalexiv.yandextest.musicbrowser.ui.PerformersAdapter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.net.ConnectException;
@@ -21,6 +25,8 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import rx.Observable;
@@ -33,14 +39,22 @@ import rx.schedulers.Schedulers;
     Activity with performers preview
  */
 public class MainActivity extends RxAppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    // Constants
+    private static final long ANIMATION_DURATION = 750;
+    private static final int NUMBER_OF_ANIMATED_ITEMS = 5;
+
     // Layout
     RecyclerView mRecyclerView;
     SwipeRefreshLayout mSwipeRefreshLayout;
-
     PerformersAdapter pAdapter;
 
-    // Retro
+    @Inject
     IPerformer iPerformer;
+
+    @Inject
+    Cache cache;
 
     // Observer for UI update
     Observer<Performer> showResultObserver;
@@ -54,27 +68,24 @@ public class MainActivity extends RxAppCompatActivity {
     // Observable with cache
     Observable<ArrayList<Performer>> cacheObservable;
 
-    // Cache for saving
-    ArrayList<Performer> cache;
-
-    // Constants
-    private final long ANIMATION_DURATION = 750;
-    private final int NUMBER_OF_ANIMATED_ITEMS = 5;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ActivityInjectors.inject(this);
+
+        ArrayList<Performer> performers = cache.restoreFromDisk();
+        if (performers != null) {
+            cacheObservable = Observable.just(performers);
+            Log.d(TAG, "Loaded from cache");
+        } else {
+            cacheObservable = Observable.empty();
+            Log.d(TAG, "Loaded from net");
+        }
+
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Исполнители");
-
-        // Restoring data from cache
-        cache = new ArrayList<>();
-        if (savedInstanceState != null)
-            cacheObservable = Observable.just(savedInstanceState.getParcelableArrayList("cache"));
-        else
-            cacheObservable = Observable.empty();
 
         // Initializing views (Butterknife for wimps)
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
@@ -82,10 +93,6 @@ public class MainActivity extends RxAppCompatActivity {
 
         configureRecyclerViewAndAdapter();
         setupSwipeToRefresh();
-
-        // Creating retrofit interface
-        iPerformer = RetrofitHolder.getRetrofit()
-                .create(IPerformer.class);
 
         initRx();
         loadFromCacheAndNetwork();
@@ -125,6 +132,8 @@ public class MainActivity extends RxAppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
+                mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+
                 if (e instanceof ConnectException || e instanceof UnknownHostException)
                     Snackbar.make(mRecyclerView, "No internet connection, swipe to refresh",
                             Snackbar.LENGTH_LONG).show();
@@ -134,16 +143,12 @@ public class MainActivity extends RxAppCompatActivity {
                 else // In some unpredictable case
                     Snackbar.make(mRecyclerView, e.toString(), Snackbar.LENGTH_LONG).show();
 
-                // Anyway show that we are done
-                mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+                e.printStackTrace();
             }
 
             @Override
             public void onNext(Performer performer) {
                 pAdapter.addPerformer(performer);
-
-                // Cache data
-                cache.add(performer);
             }
         };
 
@@ -160,23 +165,15 @@ public class MainActivity extends RxAppCompatActivity {
         });
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        // Saving cache
-        outState.putParcelableArrayList("cache", cache);
-    }
-
     private void loadFromCacheAndNetwork() {
         // Show that we are loading smthing
         mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
 
         // Rx magic goes there
-        netCall = Observable.zip(cacheObservable
-                        .switchIfEmpty(Observable.defer(() -> iPerformer.getPerformers()))
-                        .flatMap(Observable::from),
-                custromInterval, (data, delay) -> data)
+        netCall = Observable.zip(Observable.concat(cacheObservable, iPerformer.getPerformers())
+                .first()
+                .doOnNext(performers -> cache.saveToDisk(performers))
+                .flatMap(Observable::from), custromInterval, (data, delay) -> data)
                 .compose(bindToLifecycle())
                 .onBackpressureBuffer()
                 .subscribeOn(Schedulers.io())
@@ -190,6 +187,7 @@ public class MainActivity extends RxAppCompatActivity {
 
         // Another sort of Rx magic (without cache)
         netCall = Observable.zip(iPerformer.getPerformers()
+                        .doOnNext(performers -> cache.saveToDisk(performers))
                         .flatMap(Observable::from),
                 custromInterval, (data, delay) -> data)
                 .compose(bindToLifecycle())
@@ -198,4 +196,23 @@ public class MainActivity extends RxAppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showResultObserver);
     }
+
+    // Menu stuff
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_invalidate_caches:
+                cache.flush();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser.contollers;
+package com.dalexiv.yandextest.musicbrowser.domain;
 
 /**
  * Created by dalexiv on 4/24/16.

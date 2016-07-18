@@ -1,6 +1,6 @@
 package com.dalexiv.yandextest.musicbrowser;
 
-import com.dalexiv.yandextest.musicbrowser.contollers.EndingBuilder;
+import com.dalexiv.yandextest.musicbrowser.domain.EndingBuilder;
 
 import org.junit.Test;
 

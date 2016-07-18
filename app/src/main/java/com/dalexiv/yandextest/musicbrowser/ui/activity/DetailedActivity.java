@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dalexiv.yandextest.musicbrowser.R;
-import com.dalexiv.yandextest.musicbrowser.contollers.DetailedController;
+import com.dalexiv.yandextest.musicbrowser.domain.DetailedController;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 import com.squareup.picasso.Picasso;
 /*

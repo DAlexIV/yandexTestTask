@@ -1,4 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser.contollers;
+package com.dalexiv.yandextest.musicbrowser.domain;
 
 import android.content.Context;
 
