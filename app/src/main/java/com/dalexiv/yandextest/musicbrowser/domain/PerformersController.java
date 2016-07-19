@@ -1,15 +1,13 @@
 package com.dalexiv.yandextest.musicbrowser.domain;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
+import android.app.Fragment;
+import android.os.Bundle;
 import android.view.View;
 
-import com.dalexiv.yandextest.musicbrowser.ui.PerformersAdapter;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-import com.dalexiv.yandextest.musicbrowser.ui.activity.DetailedActivity;
+import com.dalexiv.yandextest.musicbrowser.ui.activity.IFragmentInteraction;
+import com.dalexiv.yandextest.musicbrowser.ui.PerformersAdapter;
+import com.dalexiv.yandextest.musicbrowser.ui.fragment.DetailedFragment;
 import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
@@ -27,8 +25,8 @@ public class PerformersController extends BaseController {
     // Current list of performers in adapter
     private List<Performer> dataset;
 
-    public PerformersController(Context context) {
-        super(context);
+    public PerformersController(Fragment fragment) {
+        super(fragment);
         this.dataset = new ArrayList<>();
     }
 
@@ -43,7 +41,7 @@ public class PerformersController extends BaseController {
         Performer performer = dataset.get(position);
 
         // Loading preview image
-        Picasso.with(context.get())
+        Picasso.with(fragment.get().getActivity())
                 .load(performer.getCover().getSmall())
 //                .placeholder(R.drawable.placeholder)
                 .into(holder.mImageView);
@@ -69,18 +67,14 @@ public class PerformersController extends BaseController {
         if (index < 0 && index >= dataset.size())
             throw new IllegalArgumentException("Index is out of bound in adapter within RecyclerView");
 
-        // If everything OK, then return click listener
+        // If everything is OK, then return click listener
         return v -> {
-            Intent intent = new Intent(context.get(), DetailedActivity.class);
-            intent.putExtra("performer", dataset.get(index));
-
-            // Adding various transition options
-            ActivityOptionsCompat options
-                    = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context.get(),
-                    new Pair<>(holder.mImageView, "picture"),
-                    new Pair<>(holder.mTextViewGenre, "genre"),
-                    new Pair<>(holder.mTextViewStats, "stats"));
-            context.get().startActivity(intent, options.toBundle());
+            DetailedFragment detailedFragment = new DetailedFragment();
+            Bundle fragmentArgs = new Bundle();
+            fragmentArgs.putParcelable("performer", dataset.get(index));
+            detailedFragment.setArguments(fragmentArgs);
+            ((IFragmentInteraction) fragment.get().getActivity())
+                    .replaceMeWithFragment(detailedFragment);
         };
     }
 
@@ -100,11 +94,11 @@ public class PerformersController extends BaseController {
         this.dataset = dataset;
     }
 
-    public Context getContext() {
-        return context.get();
+    public Fragment getFragment() {
+        return fragment.get();
     }
 
-    public void setContext(Context context) {
-        this.context = new WeakReference<>(context);
+    public void setContext(Fragment fragment) {
+        this.fragment = new WeakReference<>(fragment);
     }
 }

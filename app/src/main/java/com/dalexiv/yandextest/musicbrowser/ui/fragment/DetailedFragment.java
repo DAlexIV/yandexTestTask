@@ -1,75 +1,91 @@
-package com.dalexiv.yandextest.musicbrowser.ui.activity;
+package com.dalexiv.yandextest.musicbrowser.ui.fragment;
 
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dalexiv.yandextest.musicbrowser.R;
-import com.dalexiv.yandextest.musicbrowser.domain.DetailedController;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
+import com.dalexiv.yandextest.musicbrowser.domain.DetailedController;
 import com.squareup.picasso.Picasso;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /*
-    Activity with detailed data about selected performer
+    Fragment with detailed data about selected performer
  */
-public class DetailedActivity extends AppCompatActivity {
-    // References to view
-    ImageView mImageArtist;
-    TextView mTextGenres;
-    TextView mTextStats;
-    TextView mTextDescription;
-    TextView mTextLink;
+public class DetailedFragment extends Fragment {
+    // Layout
+    @BindView(R.id.linearContainer)
     LinearLayout mLinearLayout;
+    @BindView(R.id.imageView)
+    ImageView mImageArtist;
+    @BindView(R.id.perfGenre)
+    TextView mTextGenres;
+    @BindView(R.id.perfStats)
+    TextView mTextStats;
+    @BindView(R.id.perfDesc)
+    TextView mTextDescription;
+    @BindView(R.id.perfLink)
+    TextView mTextLink;
+    Unbinder unbinder;
 
     // Current performer
     Performer performer;
 
     DetailedController controller;
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detailed);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_detailed, container, false);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
+    }
 
-        // Initializing toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        // Initializing views (Butterknife for wimps)
-        mLinearLayout = (LinearLayout) findViewById(R.id.linearContainer);
-        mImageArtist = (ImageView) findViewById(R.id.imageView);
-        mTextGenres = (TextView) findViewById(R.id.perfGenre);
-        mTextStats = (TextView) findViewById(R.id.perfStats);
-        mTextDescription = (TextView) findViewById(R.id.perfDesc);
-        mTextLink = (TextView) findViewById(R.id.perfLink);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         // Getting the performer from intent
-        performer = getIntent().getParcelableExtra("performer");
+        performer = getArguments().getParcelable("performer");
 
         // If it's null, basically inform the user
         if (performer == null) {
-            Toast.makeText(this, "No performer given", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No performer given", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // TODO refactor into DI dependency
         // Initializing controller with received performer
         controller = new DetailedController(performer, this);
 
         fillAcvitiyWithData();
 
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         // Configuring actionbar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(performer.getName());
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(performer.getName());
         }
     }
 
     private void fillAcvitiyWithData() {
         // Loading big image
-        Picasso.with(this)
+        Picasso.with(getActivity())
                 .load(performer.getCover().getBig())
 //                .placeholder(R.drawable.placeholder)
                 .into(mImageArtist);
@@ -95,7 +111,6 @@ public class DetailedActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            supportFinishAfterTransition();
             return true;
         }
 

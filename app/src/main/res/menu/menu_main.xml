@@ -1,8 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activity.MainActivity">
+    tools:fragment=".ui.activity.MainActivity">
 
+    <item
+        android:id="@+id/action_send_email"
+        android:title="@string/invalidate_caches"
+        android:icon="@drawable/ic_mail_outline_black_24px"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_invalidate_caches"
         android:title="@string/invalidate_caches"

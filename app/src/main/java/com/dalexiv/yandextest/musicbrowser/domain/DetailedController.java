@@ -1,6 +1,6 @@
 package com.dalexiv.yandextest.musicbrowser.domain;
 
-import android.content.Context;
+import android.app.Fragment;
 
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 
@@ -10,13 +10,13 @@ import java.util.Arrays;
  * Created by dalexiv on 4/24/16.
  */
 /*
-    Encapsulates logic of generating and setting data at DetailedActivity
+    Encapsulates logic of generating and setting data at DetailedFragment
  */
 public class DetailedController extends BaseController {
     private Performer performer;
 
-    public DetailedController(Performer performer, Context context) {
-        super(context);
+    public DetailedController(Performer performer, Fragment fragment) {
+        super(fragment);
         this.performer = performer;
     }
 

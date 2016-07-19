@@ -2,7 +2,7 @@ package com.dalexiv.yandextest.musicbrowser.di;
 
 import android.content.Context;
 
-import com.dalexiv.yandextest.musicbrowser.Cache;
+import com.dalexiv.yandextest.musicbrowser.net.DiskCache;
 
 import javax.inject.Singleton;
 
@@ -17,7 +17,7 @@ import dagger.Provides;
 public class CacheModule {
     @Singleton
     @Provides
-    Cache provideCache(Context context) {
-        return new Cache(context);
+    DiskCache provideCache(Context context) {
+        return new DiskCache(context);
     }
 }

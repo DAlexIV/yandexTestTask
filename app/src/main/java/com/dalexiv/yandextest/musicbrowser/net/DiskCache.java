@@ -1,4 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser;
+package com.dalexiv.yandextest.musicbrowser.net;
 
 import android.content.Context;
 import android.util.Log;
@@ -20,13 +20,13 @@ import java.util.ArrayList;
  * Created by dalexiv on 7/18/16.
  */
 
-public class Cache {
-    private static final String TAG = Cache.class.getSimpleName();
+public class DiskCache {
+    private static final String TAG = DiskCache.class.getSimpleName();
     private static final String PERFORMERS_FILENAME = "performers.json";
     private static final Gson gson = new Gson();
     private final File file;
 
-    public Cache(Context context) {
+    public DiskCache(Context context) {
         file = new File(context.getCacheDir(), PERFORMERS_FILENAME);
     }
 
