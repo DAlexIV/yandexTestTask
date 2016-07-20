@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,6 +45,10 @@ public class DetailedFragment extends Fragment {
     Performer performer;
 
     DetailedController controller;
+
+    public static DetailedFragment newInstance() {
+        return new DetailedFragment();
+    }
 
     @Nullable
     @Override
@@ -90,7 +93,7 @@ public class DetailedFragment extends Fragment {
 //                .placeholder(R.drawable.placeholder)
                 .into(mImageArtist);
 
-        // Setting various text views
+        // Setting various emailText views
         mTextGenres.setText(controller.generateGenres());
         mTextStats.setText(controller.generateStats());
         mTextDescription.setText(controller.generateDescription());
@@ -101,19 +104,5 @@ public class DetailedFragment extends Fragment {
         } else {
             mTextLink.setText(controller.generateLink());
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

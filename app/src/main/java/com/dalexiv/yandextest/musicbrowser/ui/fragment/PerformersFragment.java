@@ -15,10 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dalexiv.yandextest.musicbrowser.net.DiskCache;
 import com.dalexiv.yandextest.musicbrowser.R;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 import com.dalexiv.yandextest.musicbrowser.di.FragmentInjectors;
+import com.dalexiv.yandextest.musicbrowser.net.DiskCache;
 import com.dalexiv.yandextest.musicbrowser.net.IPerformer;
 import com.dalexiv.yandextest.musicbrowser.ui.DividerItemDecoration;
 import com.dalexiv.yandextest.musicbrowser.ui.PerformersAdapter;
@@ -54,8 +54,10 @@ public class PerformersFragment extends RxFragment {
     private static final int NUMBER_OF_ANIMATED_ITEMS = 5;
 
     // Layout
-    @BindView(R.id.recyclerPerfs) RecyclerView mRecyclerView;
-    @BindView(R.id.swipeRefresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.recyclerPerfs)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private Unbinder unbinder;
 
     PerformersAdapter pAdapter;
@@ -78,18 +80,28 @@ public class PerformersFragment extends RxFragment {
     // Observable with cache
     Observable<ArrayList<Performer>> cacheObservable;
 
+    public static PerformersFragment newInstance() {
+        return new PerformersFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentInjectors.inject(this);
 
-        ArrayList<Performer> performers = cache.restoreFromDisk();
-        if (performers != null) {
-            cacheObservable = Observable.just(performers);
-            Log.d(TAG, "Loaded from cache");
-        } else {
+        try {
+            ArrayList<Performer> performers = cache.restoreFromDisk();
+            if (performers != null) {
+                cacheObservable = Observable.just(performers);
+                Log.d(TAG, "Loaded from cache");
+            } else {
+                cacheObservable = Observable.empty();
+                Log.d(TAG, "Loaded from net");
+            }
+        }
+        catch (Exception ex) {
             cacheObservable = Observable.empty();
-            Log.d(TAG, "Loaded from net");
+            Log.d(TAG, "Loaded from net, because of " + ex.getMessage());
         }
 
     }
@@ -108,8 +120,8 @@ public class PerformersFragment extends RxFragment {
         // Refactor into interface
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setTitle("Исполнители");
-            actionBar.setDefaultDisplayHomeAsUpEnabled(false);
         }
 
         configureRecyclerViewAndAdapter();
@@ -148,12 +160,12 @@ public class PerformersFragment extends RxFragment {
         showResultObserver = new Observer<Performer>() {
             @Override
             public void onCompleted() {
-                mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+                setRefreshing(false);
             }
 
             @Override
             public void onError(Throwable e) {
-                mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+                setRefreshing(false);
 
                 if (e instanceof ConnectException || e instanceof UnknownHostException)
                     Snackbar.make(mRecyclerView, "No internet connection, swipe to refresh",
@@ -188,7 +200,7 @@ public class PerformersFragment extends RxFragment {
 
     private void loadFromCacheAndNetwork() {
         // Show that we are loading smthing
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+        setRefreshing(true);
 
         // Rx magic goes there
         netCall = Observable.zip(Observable.concat(cacheObservable, iPerformer.getPerformers())
@@ -204,7 +216,7 @@ public class PerformersFragment extends RxFragment {
 
     private void loadFromNetworkOnly() {
         // Show that we are loading smthing
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+        setRefreshing(true);
 
         // Another sort of Rx magic (without cache)
         netCall = Observable.zip(iPerformer.getPerformers()
@@ -222,5 +234,13 @@ public class PerformersFragment extends RxFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    private void setRefreshing(boolean isRefreshing) {
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.post(() -> {
+                if (mSwipeRefreshLayout != null)
+                    mSwipeRefreshLayout.setRefreshing(isRefreshing);
+            });
     }
 }

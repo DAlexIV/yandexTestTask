@@ -11,9 +11,8 @@
         <item>песни</item>
         <item>песен</item>
     </string-array>
-    <string name="title_activity_detailed">DetailedActivity</string>
     <string name="content_header">Биография</string>
     <string name="invalidate_caches">Сбросить кэш</string>
     <string name="enter_your_message">Введите сообщение…</string>
-    <string name="send_message_text">Отправить сообщение</string>
+    <string name="send_message_text">Связаться с разработчиком</string>
 </resources>

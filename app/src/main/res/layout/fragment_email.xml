@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/email_edittext"
+        android:hint="@string/enter_your_message"
+        android:gravity="start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_vertical_margin"
+        android:minHeight="100dp"/>
+    <Button
+        android:id="@+id/submit_email"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorAccent"
+        android:text="@string/send_message_text"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

@@ -69,11 +69,14 @@ public class PerformersController extends BaseController {
 
         // If everything is OK, then return click listener
         return v -> {
-            DetailedFragment detailedFragment = new DetailedFragment();
+            final IFragmentInteraction parentActivity
+                    = (IFragmentInteraction) fragment.get().getActivity();
+
+            DetailedFragment detailedFragment = DetailedFragment.newInstance();
             Bundle fragmentArgs = new Bundle();
             fragmentArgs.putParcelable("performer", dataset.get(index));
             detailedFragment.setArguments(fragmentArgs);
-            ((IFragmentInteraction) fragment.get().getActivity())
+            parentActivity
                     .replaceMeWithFragment(detailedFragment);
         };
     }
