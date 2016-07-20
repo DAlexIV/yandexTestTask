@@ -15,4 +15,8 @@
     <string name="invalidate_caches">Сбросить кэш</string>
     <string name="enter_your_message">Введите сообщение…</string>
     <string name="send_message_text">Связаться с разработчиком</string>
+    <string name="about_app">Приложение разработано в рамках проeкта Яндекса Мобилизация.\nИванов Алексей. 2016 год.</string>
+    <string name="about_link">Узнайте больше на https://yandex.ru/mobilization/</string>
+    <string name="send_email_text">Связаться с разработчиком</string>
+    <string name="about_menu_text">О приложении</string>
 </resources>

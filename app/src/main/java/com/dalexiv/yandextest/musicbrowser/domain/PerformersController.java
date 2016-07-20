@@ -52,29 +52,23 @@ public class PerformersController extends BaseController {
         holder.mTextViewStats.setText(EndingBuilder.buildStats(performer.getAlbums(),
                 performer.getTracks(), ", ", albumsEnding, tracksEnding));
 
-        // Setting appropriate OnClickListener
-        holder.itemView.setOnClickListener(bindClickListenerByIndex(position, holder));
+
     }
 
     /**
      * Binds click listener to view
      *
-     * @param index index of bindable view
+     * @param holder viewholder of bindable view
      * @return generated click listener
      */
-    public View.OnClickListener bindClickListenerByIndex(int index, PerformersAdapter.ViewHolder holder) {
-        // Handling corner cases
-        if (index < 0 && index >= dataset.size())
-            throw new IllegalArgumentException("Index is out of bound in adapter within RecyclerView");
-
-        // If everything is OK, then return click listener
+    public View.OnClickListener bindClickListenerByIndex(PerformersAdapter.ViewHolder holder) {
         return v -> {
             final IFragmentInteraction parentActivity
                     = (IFragmentInteraction) fragment.get().getActivity();
 
             DetailedFragment detailedFragment = DetailedFragment.newInstance();
             Bundle fragmentArgs = new Bundle();
-            fragmentArgs.putParcelable("performer", dataset.get(index));
+            fragmentArgs.putParcelable("performer", dataset.get(holder.getAdapterPosition()));
             detailedFragment.setArguments(fragmentArgs);
             parentActivity
                     .replaceMeWithFragment(detailedFragment);

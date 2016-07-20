@@ -11,6 +11,7 @@ import com.dalexiv.yandextest.musicbrowser.R;
 import com.dalexiv.yandextest.musicbrowser.di.ActivityInjectors;
 import com.dalexiv.yandextest.musicbrowser.net.DiskCache;
 import com.dalexiv.yandextest.musicbrowser.notifyOnPlug.HeadphonesPlugReceiver;
+import com.dalexiv.yandextest.musicbrowser.ui.fragment.FragmentAbout;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.PerformersFragment;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.SendEmailFragment;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -22,12 +23,9 @@ import javax.inject.Inject;
  */
 public class MainActivity extends RxAppCompatActivity implements IFragmentInteraction {
     private static final String TAG = MainActivity.class.getSimpleName();
-
     @Inject
     DiskCache cache;
-
-    HeadphonesPlugReceiver receiver;
-
+    private HeadphonesPlugReceiver receiver;
 
     @Override
     protected void onResume() {
@@ -43,13 +41,12 @@ public class MainActivity extends RxAppCompatActivity implements IFragmentIntera
 
         ActivityInjectors.inject(this);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.main_frame_layout, PerformersFragment.newInstance())
-                .commit();
+        if (savedInstanceState == null)
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.main_frame_layout, PerformersFragment.newInstance())
+                    .commit();
 
         receiver = new HeadphonesPlugReceiver();
-
-
     }
 
 
@@ -66,8 +63,12 @@ public class MainActivity extends RxAppCompatActivity implements IFragmentIntera
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.action_about:
+                replaceMeWithFragment(FragmentAbout.newInstance());
+                return true;
             case R.id.action_send_email:
                 replaceMeWithFragment(SendEmailFragment.newInstance());
+                return true;
             case R.id.action_invalidate_caches:
                 cache.flush();
                 return true;
@@ -82,5 +83,11 @@ public class MainActivity extends RxAppCompatActivity implements IFragmentIntera
                 .replace(R.id.main_frame_layout, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }

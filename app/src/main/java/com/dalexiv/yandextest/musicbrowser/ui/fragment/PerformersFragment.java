@@ -90,6 +90,7 @@ public class PerformersFragment extends RxFragment {
         FragmentInjectors.inject(this);
 
         try {
+            // Better to rewrite restoreFromDisk into observable
             ArrayList<Performer> performers = cache.restoreFromDisk();
             if (performers != null) {
                 cacheObservable = Observable.just(performers);
