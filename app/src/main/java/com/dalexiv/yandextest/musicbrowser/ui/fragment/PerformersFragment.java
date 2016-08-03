@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +59,7 @@ public class PerformersFragment extends RxFragment {
     SwipeRefreshLayout mSwipeRefreshLayout;
     private Unbinder unbinder;
 
-    PerformersAdapter pAdapter;
+    private PerformersAdapter pAdapter;
 
     @Inject
     IPerformer iPerformer;
@@ -69,16 +68,16 @@ public class PerformersFragment extends RxFragment {
     DiskCache cache;
 
     // Observer for UI update
-    Observer<Performer> showResultObserver;
+    private Observer<Performer> showResultObserver;
 
     // Custom observable for better animation timings
-    Observable<Long> custromInterval;
+    private Observable<Long> custromInterval;
 
     // Main subsription
-    Subscription netCall;
+    private Subscription netCall;
 
     // Observable with cache
-    Observable<ArrayList<Performer>> cacheObservable;
+    private Observable<ArrayList<Performer>> cacheObservable;
 
     public static PerformersFragment newInstance() {
         return new PerformersFragment();
@@ -89,22 +88,16 @@ public class PerformersFragment extends RxFragment {
         super.onCreate(savedInstanceState);
         FragmentInjectors.inject(this);
 
-        try {
-            // Better to rewrite restoreFromDisk into observable
-            ArrayList<Performer> performers = cache.restoreFromDisk();
-            if (performers != null) {
-                cacheObservable = Observable.just(performers);
-                Log.d(TAG, "Loaded from cache");
-            } else {
-                cacheObservable = Observable.empty();
-                Log.d(TAG, "Loaded from net");
-            }
-        }
-        catch (Exception ex) {
-            cacheObservable = Observable.empty();
-            Log.d(TAG, "Loaded from net, because of " + ex.getMessage());
-        }
 
+        cacheObservable = Observable.create(subscriber -> {
+            try {
+                subscriber.onNext(cache.restoreFromDisk());
+                subscriber.onCompleted();
+            }
+            catch (Exception ex) {
+                subscriber.onError(ex);
+            }
+        });
     }
 
     @Nullable
