@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.dalexiv.yandextest.musicbrowser.R;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-import com.dalexiv.yandextest.musicbrowser.domain.PerformersController;
+import com.dalexiv.yandextest.musicbrowser.presenters.PerformersStringPresenter;
 
 /**
  * Created by dalexiv on 4/21/16.
@@ -19,10 +19,10 @@ import com.dalexiv.yandextest.musicbrowser.domain.PerformersController;
     Adapter for recyclerview in MainActivity
  */
 public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.ViewHolder> {
-    private PerformersController controller;
+    private PerformersStringPresenter controller;
 
     public PerformersAdapter(Fragment fragment) {
-        controller = new PerformersController(fragment);
+        controller = new PerformersStringPresenter(fragment);
     }
 
     @Override

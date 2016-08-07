@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.dalexiv.yandextest.musicbrowser.R;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-import com.dalexiv.yandextest.musicbrowser.domain.DetailedController;
+import com.dalexiv.yandextest.musicbrowser.presenters.DetailedStringPresenter;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -44,7 +44,7 @@ public class DetailedFragment extends Fragment {
     // Current performer
     Performer performer;
 
-    DetailedController controller;
+    DetailedStringPresenter controller;
 
     public static DetailedFragment newInstance() {
         return new DetailedFragment();
@@ -74,7 +74,7 @@ public class DetailedFragment extends Fragment {
 
         // TODO refactor into DI dependency
         // Initializing controller with received performer
-        controller = new DetailedController(performer, this);
+        controller = new DetailedStringPresenter(performer, this);
 
         fillAcvitiyWithData();
 

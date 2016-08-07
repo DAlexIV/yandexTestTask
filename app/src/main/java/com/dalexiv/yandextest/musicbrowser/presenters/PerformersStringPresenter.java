@@ -1,12 +1,12 @@
-package com.dalexiv.yandextest.musicbrowser.domain;
+package com.dalexiv.yandextest.musicbrowser.presenters;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
 
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-import com.dalexiv.yandextest.musicbrowser.ui.activity.IFragmentInteraction;
 import com.dalexiv.yandextest.musicbrowser.ui.PerformersAdapter;
+import com.dalexiv.yandextest.musicbrowser.ui.activity.IFragmentInteraction;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.DetailedFragment;
 import com.squareup.picasso.Picasso;
 
@@ -21,11 +21,11 @@ import java.util.List;
 /*
     Encapsulates logic of generating and setting data at PerformersAdapter
  */
-public class PerformersController extends BaseController {
+public class PerformersStringPresenter extends BaseStringPresenter {
     // Current list of performers in adapter
     private List<Performer> dataset;
 
-    public PerformersController(Fragment fragment) {
+    public PerformersStringPresenter(Fragment fragment) {
         super(fragment);
         this.dataset = new ArrayList<>();
     }
@@ -49,10 +49,7 @@ public class PerformersController extends BaseController {
         // Setting various text fields
         holder.mTextViewName.setText(performer.getName());
         holder.mTextViewGenre.setText(Arrays.toString(performer.getGenres()).replaceAll("[\\[\\]]", ""));
-        holder.mTextViewStats.setText(EndingBuilder.buildStats(performer.getAlbums(),
-                performer.getTracks(), ", ", albumsEnding, tracksEnding));
-
-
+        holder.mTextViewStats.setText(generateStats(performer, ", "));
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser.domain;
+package com.dalexiv.yandextest.musicbrowser.presenters;
 
 import android.app.Fragment;
 
@@ -12,10 +12,10 @@ import java.util.Arrays;
 /*
     Encapsulates logic of generating and setting data at DetailedFragment
  */
-public class DetailedController extends BaseController {
+public class DetailedStringPresenter extends BaseStringPresenter {
     private Performer performer;
 
-    public DetailedController(Performer performer, Fragment fragment) {
+    public DetailedStringPresenter(Performer performer, Fragment fragment) {
         super(fragment);
         this.performer = performer;
     }
@@ -25,12 +25,15 @@ public class DetailedController extends BaseController {
     }
 
     public String generateStats() {
-        return EndingBuilder.buildStats(performer.getAlbums(),
-                performer.getTracks(), " · ", albumsEnding, tracksEnding);
+        return super.generateStats(performer, " \u2022 ");
     }
 
     public String generateDescription() {
-        return performer.getName() + " – " + performer.getDescription();
+        builder.setLength(0);
+        builder.append(performer.getName());
+        builder.append(" - ");
+        builder.append(performer.getDescription());
+        return builder.toString();
     }
 
     public String generateLink() {

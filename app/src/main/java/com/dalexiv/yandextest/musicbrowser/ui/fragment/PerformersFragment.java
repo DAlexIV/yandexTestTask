@@ -87,17 +87,7 @@ public class PerformersFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentInjectors.inject(this);
-
-
-        cacheObservable = Observable.create(subscriber -> {
-            try {
-                subscriber.onNext(cache.restoreFromDisk());
-                subscriber.onCompleted();
-            }
-            catch (Exception ex) {
-                subscriber.onError(ex);
-            }
-        });
+        cacheObservable = Observable.fromCallable(() -> cache.restoreFromDisk());
     }
 
     @Nullable
