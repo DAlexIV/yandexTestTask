@@ -1,6 +1,7 @@
 package com.dalexiv.yandextest.musicbrowser.presenters;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
 
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 
@@ -15,8 +16,8 @@ import java.util.Arrays;
 public class DetailedStringPresenter extends BaseStringPresenter {
     private Performer performer;
 
-    public DetailedStringPresenter(Performer performer, Fragment fragment) {
-        super(fragment);
+    public void bindView(@NonNull Fragment view, Performer performer) {
+        super.bindView(view);
         this.performer = performer;
     }
 

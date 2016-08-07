@@ -1,8 +1,8 @@
 package com.dalexiv.yandextest.musicbrowser.di;
 
 
+import com.dalexiv.yandextest.musicbrowser.presenters.PerformersStringPresenter;
 import com.dalexiv.yandextest.musicbrowser.ui.activity.MainActivity;
-import com.dalexiv.yandextest.musicbrowser.ui.fragment.PerformersFragment;
 
 import javax.inject.Singleton;
 
@@ -15,7 +15,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = {NetModule.class, CacheModule.class})
 public interface AppDiComponent {
-    void inject(PerformersFragment fragment);
+    void inject(PerformersStringPresenter presenter);
 
     void inject(MainActivity mainActivity);
 }

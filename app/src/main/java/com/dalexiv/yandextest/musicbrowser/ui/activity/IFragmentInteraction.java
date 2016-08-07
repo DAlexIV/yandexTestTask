@@ -1,6 +1,6 @@
 package com.dalexiv.yandextest.musicbrowser.ui.activity;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 
 /**
  * Created by dalexiv on 7/19/16.

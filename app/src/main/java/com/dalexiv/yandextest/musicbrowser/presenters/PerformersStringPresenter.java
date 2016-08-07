@@ -1,19 +1,26 @@
 package com.dalexiv.yandextest.musicbrowser.presenters;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.View;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-import com.dalexiv.yandextest.musicbrowser.ui.PerformersAdapter;
-import com.dalexiv.yandextest.musicbrowser.ui.activity.IFragmentInteraction;
-import com.dalexiv.yandextest.musicbrowser.ui.fragment.DetailedFragment;
-import com.squareup.picasso.Picasso;
+import com.dalexiv.yandextest.musicbrowser.di.PresenterInjectors;
+import com.dalexiv.yandextest.musicbrowser.net.DiskCache;
+import com.dalexiv.yandextest.musicbrowser.net.IPerformer;
+import com.dalexiv.yandextest.musicbrowser.ui.fragment.PerformersFragment;
 
-import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by dalexiv on 4/24/16.
@@ -21,78 +28,103 @@ import java.util.List;
 /*
     Encapsulates logic of generating and setting data at PerformersAdapter
  */
-public class PerformersStringPresenter extends BaseStringPresenter {
+public class PerformersStringPresenter extends BaseStringPresenter<PerformersFragment> {
     // Current list of performers in adapter
-    private List<Performer> dataset;
+    @Inject
+    IPerformer iPerformer;
+    @Inject
+    DiskCache cache;
 
-    public PerformersStringPresenter(Fragment fragment) {
-        super(fragment);
-        this.dataset = new ArrayList<>();
+    // Observable with cache
+    private Observable<ArrayList<Performer>> cacheObservable;
+
+    // Observer for UI update
+    private Observer<Performer> showResultObserver;
+
+    // Main subsription
+    private Subscription netCall;
+
+
+    @Override
+    public void bindView(@NonNull PerformersFragment view) {
+        super.bindView(view);
+        PresenterInjectors.inject(this);
+        cacheObservable = Observable.fromCallable(() -> cache.restoreFromDisk());
+        initRx();
+        loadFromCacheAndNetwork();
+    }
+
+    private void loadFromCacheAndNetwork() {
+        // Show that we are loading smthing
+        view().setRefreshing(true);
+
+        // Rx magic goes there
+        netCall = Observable.zip(Observable.concat(cacheObservable, iPerformer.getPerformers())
+                .first()
+                .doOnNext(performers -> cache.saveToDisk(performers))
+                .flatMap(Observable::from), view().getAnimationIntervalObservable(), (data, delay) -> data)
+                .onBackpressureBuffer()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(showResultObserver);
     }
 
 
-    /**
-     * Fills performer's ViewHolder with data
-     *
-     * @param holder   performer's ViewHolder
-     * @param position index of that ViewHolder
-     */
-    public void fillWithData(PerformersAdapter.ViewHolder holder, int position) {
-        Performer performer = dataset.get(position);
+    private void loadFromNetworkOnly() {
+        // Show that we are loading smthing
+        view().setRefreshing(true);
 
-        // Loading preview image
-        Picasso.with(fragment.get().getActivity())
-                .load(performer.getCover().getSmall())
-//                .placeholder(R.drawable.placeholder)
-                .into(holder.mImageView);
-
-        // Setting various text fields
-        holder.mTextViewName.setText(performer.getName());
-        holder.mTextViewGenre.setText(Arrays.toString(performer.getGenres()).replaceAll("[\\[\\]]", ""));
-        holder.mTextViewStats.setText(generateStats(performer, ", "));
+        // Another sort of Rx magic (without cache)
+        netCall = Observable.zip(iPerformer.getPerformers()
+                        .doOnNext(performers -> cache.saveToDisk(performers))
+                        .flatMap(Observable::from),
+                view().getAnimationIntervalObservable(), (data, delay) -> data)
+                .onBackpressureBuffer()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(showResultObserver);
     }
 
-    /**
-     * Binds click listener to view
-     *
-     * @param holder viewholder of bindable view
-     * @return generated click listener
-     */
-    public View.OnClickListener bindClickListenerByIndex(PerformersAdapter.ViewHolder holder) {
-        return v -> {
-            final IFragmentInteraction parentActivity
-                    = (IFragmentInteraction) fragment.get().getActivity();
+    private void initRx() {
+        showResultObserver = new Observer<Performer>() {
+            @Override
+            public void onCompleted() {
+                view().setRefreshing(false);
+            }
 
-            DetailedFragment detailedFragment = DetailedFragment.newInstance();
-            Bundle fragmentArgs = new Bundle();
-            fragmentArgs.putParcelable("performer", dataset.get(holder.getAdapterPosition()));
-            detailedFragment.setArguments(fragmentArgs);
-            parentActivity
-                    .replaceMeWithFragment(detailedFragment);
+            @Override
+            public void onError(Throwable e) {
+                view().setRefreshing(false);
+
+                if (e instanceof ConnectException || e instanceof UnknownHostException)
+                    view().notifyUser("No internet connection, swipe to refresh");
+                if (e instanceof SocketTimeoutException)
+                    view().notifyUser("Connection is a little bit slow, swipe to refresh");
+                else // In some unpredictable case
+                    view().notifyUser(e.toString());
+
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(Performer performer) {
+                view().addPerformer(performer);
+            }
         };
     }
 
-    public void addPerfromer(Performer perf) {
-        dataset.add(perf);
+    public void doSwipeToRefresh() {
+        view().clearPerformers();
+        loadFromNetworkOnly();
     }
 
-    public void clearPerformers() {
-        dataset.clear();
+    public Fragment getView() {
+        return view();
     }
 
-    public List<Performer> getDataset() {
-        return dataset;
-    }
-
-    public void setDataset(List<Performer> dataset) {
-        this.dataset = dataset;
-    }
-
-    public Fragment getFragment() {
-        return fragment.get();
-    }
-
-    public void setContext(Fragment fragment) {
-        this.fragment = new WeakReference<>(fragment);
+    @Override
+    public void unbindView(@NonNull PerformersFragment view) {
+        super.unbindView(view);
+        netCall.unsubscribe();
     }
 }

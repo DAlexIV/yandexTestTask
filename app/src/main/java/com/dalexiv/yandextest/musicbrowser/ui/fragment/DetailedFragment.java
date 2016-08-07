@@ -1,6 +1,6 @@
 package com.dalexiv.yandextest.musicbrowser.ui.fragment;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -44,10 +44,19 @@ public class DetailedFragment extends Fragment {
     // Current performer
     Performer performer;
 
-    DetailedStringPresenter controller;
+    DetailedStringPresenter presenter;
 
     public static DetailedFragment newInstance() {
         return new DetailedFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // TODO refactor into DI dependency
+        // Initializing presenter with received performer
+        presenter = new DetailedStringPresenter();
     }
 
     @Nullable
@@ -72,9 +81,7 @@ public class DetailedFragment extends Fragment {
             return;
         }
 
-        // TODO refactor into DI dependency
-        // Initializing controller with received performer
-        controller = new DetailedStringPresenter(performer, this);
+        presenter.bindView(this, performer);
 
         fillAcvitiyWithData();
 
@@ -94,15 +101,23 @@ public class DetailedFragment extends Fragment {
                 .into(mImageArtist);
 
         // Setting various emailText views
-        mTextGenres.setText(controller.generateGenres());
-        mTextStats.setText(controller.generateStats());
-        mTextDescription.setText(controller.generateDescription());
+        mTextGenres.setText(presenter.generateGenres());
+        mTextStats.setText(presenter.generateStats());
+        mTextDescription.setText(presenter.generateDescription());
 
         // Optional link
         if (performer.getLink() == null) {
             mLinearLayout.removeView(mTextLink);
         } else {
-            mTextLink.setText(controller.generateLink());
+            mTextLink.setText(presenter.generateLink());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        presenter.unbindView(this);
+        unbinder.unbind();
     }
 }

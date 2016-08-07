@@ -1,6 +1,7 @@
 package com.dalexiv.yandextest.musicbrowser.ui;
 
-import android.app.Fragment;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,15 @@ import android.widget.TextView;
 
 import com.dalexiv.yandextest.musicbrowser.R;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-import com.dalexiv.yandextest.musicbrowser.presenters.PerformersStringPresenter;
+import com.dalexiv.yandextest.musicbrowser.ui.activity.IFragmentInteraction;
+import com.dalexiv.yandextest.musicbrowser.ui.fragment.DetailedFragment;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 /**
  * Created by dalexiv on 4/21/16.
@@ -19,10 +28,15 @@ import com.dalexiv.yandextest.musicbrowser.presenters.PerformersStringPresenter;
     Adapter for recyclerview in MainActivity
  */
 public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.ViewHolder> {
-    private PerformersStringPresenter controller;
+    private List<Performer> dataset;
+    private Fragment fragment;
+    private IGenerateStats iGenerateStats;
 
-    public PerformersAdapter(Fragment fragment) {
-        controller = new PerformersStringPresenter(fragment);
+    public PerformersAdapter(Fragment fragment, IGenerateStats iGenerateStats) {
+        this.fragment = fragment;
+        this.iGenerateStats = iGenerateStats;
+        this.dataset = new ArrayList<>();
+
     }
 
     @Override
@@ -31,28 +45,51 @@ public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.Vi
                 .inflate(R.layout.item, parent, false);
         // Setting appropriate OnClickListener
         final ViewHolder viewHolder = new ViewHolder(item);
-        viewHolder.itemView.setOnClickListener(controller
-                .bindClickListenerByIndex(viewHolder));
+        viewHolder.itemView.setOnClickListener(click -> {
+            if (viewHolder.getAdapterPosition() == NO_POSITION)
+                return;
+
+            final IFragmentInteraction parentActivity
+                    = (IFragmentInteraction) fragment.getActivity();
+
+            DetailedFragment detailedFragment = DetailedFragment.newInstance();
+            Bundle fragmentArgs = new Bundle();
+            fragmentArgs.putParcelable("performer", dataset.get(viewHolder.getAdapterPosition()));
+            detailedFragment.setArguments(fragmentArgs);
+            parentActivity
+                    .replaceMeWithFragment(detailedFragment);
+        });
+
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // Just redirect call to controller
-        controller.fillWithData(holder, position);
+        // Just redirect call to presenter
+        Performer performer = dataset.get(position);
+
+        // Loading preview image
+        Picasso.with(fragment.getActivity())
+                .load(performer.getCover().getSmall())
+//                .placeholder(R.drawable.placeholder)
+                .into(holder.mImageView);
+
+        // Setting various text fields
+        holder.mTextViewName.setText(performer.getName());
+        holder.mTextViewGenre.setText(Arrays.toString(performer.getGenres()).replaceAll("[\\[\\]]", ""));
+        holder.mTextViewStats.setText(iGenerateStats.generateStats(performer, ", "));
     }
 
     public void addPerformer(Performer performer) {
-        // Just redirect call to controller
-        controller.addPerfromer(performer);
+        dataset.add(performer);
 
         // Notify about added element
-        notifyItemInserted(controller.getDataset().size());
+        notifyItemInserted(dataset.size() - 1);
     }
 
     public void clearPerformers() {
-        // Just redirect call to controller
-        controller.clearPerformers();
+        // Just redirect call to presenter
+        dataset.clear();
 
         // Notify about removed elements
         notifyDataSetChanged();
@@ -60,7 +97,7 @@ public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return controller.getDataset().size();
+        return dataset.size();
     }
 
     /*

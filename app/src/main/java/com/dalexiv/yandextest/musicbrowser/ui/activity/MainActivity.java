@@ -1,9 +1,10 @@
 package com.dalexiv.yandextest.musicbrowser.ui.activity;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,14 +15,13 @@ import com.dalexiv.yandextest.musicbrowser.notifyOnPlug.HeadphonesPlugReceiver;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.FragmentAbout;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.PerformersFragment;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.SendEmailFragment;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import javax.inject.Inject;
 
 /*
     Activity with performers preview
  */
-public class MainActivity extends RxAppCompatActivity implements IFragmentInteraction {
+public class MainActivity extends AppCompatActivity implements IFragmentInteraction {
     private static final String TAG = MainActivity.class.getSimpleName();
     @Inject
     DiskCache cache;
@@ -42,7 +42,7 @@ public class MainActivity extends RxAppCompatActivity implements IFragmentIntera
         ActivityInjectors.inject(this);
 
         if (savedInstanceState == null)
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main_frame_layout, PerformersFragment.newInstance())
                     .commit();
 
@@ -79,7 +79,7 @@ public class MainActivity extends RxAppCompatActivity implements IFragmentIntera
 
     @Override
     public void replaceMeWithFragment(Fragment fragment) {
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_frame_layout, fragment)
                 .addToBackStack(null)
                 .commit();

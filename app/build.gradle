@@ -52,8 +52,6 @@ dependencies {
     }
 
     // Rx
-    compile 'com.trello:rxlifecycle:0.5.0'
-    compile 'com.trello:rxlifecycle-components:0.5.0'
     compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
     compile 'io.reactivex:rxandroid:1.0.1'
 

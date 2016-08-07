@@ -22,7 +22,6 @@ import retrofit2.RxJavaCallAdapterFactory;
 @Module
 public class NetModule {
     private static final String API_URL = "http://download.cdn.yandex.net/mobilization-2016/";
-    private static volatile Retrofit retro;
 
     @Provides
     @Singleton

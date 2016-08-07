@@ -1,12 +1,11 @@
 package com.dalexiv.yandextest.musicbrowser.presenters;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 
 import com.dalexiv.yandextest.musicbrowser.R;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by dalexiv on 4/24/16.
@@ -15,15 +14,15 @@ import java.lang.ref.WeakReference;
     Base class for both activity controllers
     Encapsulates logic of generating and setting data
  */
-public class BaseStringPresenter {
+public class BaseStringPresenter<T extends Fragment> extends Presenter<T> {
     // Weak reference to activity (for correct gc)
-    protected WeakReference<Fragment> fragment;
     protected StringBuilder builder;
     protected Resources res;
 
-    public BaseStringPresenter(Fragment fragment) {
-        this.fragment = new WeakReference<>(fragment);
-        res = fragment.getResources();
+    @Override
+    public void bindView(@NonNull T view) {
+        super.bindView(view);
+        res = view.getResources();
         builder = new StringBuilder();
     }
 
@@ -39,5 +38,10 @@ public class BaseStringPresenter {
         return builder.toString();
     }
 
-
+    @Override
+    public void unbindView(@NonNull T view) {
+        super.unbindView(view);
+        res = null;
+        builder = null;
+    }
 }
