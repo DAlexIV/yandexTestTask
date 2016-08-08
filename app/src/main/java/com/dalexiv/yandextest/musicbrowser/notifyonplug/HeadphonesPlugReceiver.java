@@ -1,4 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser.notifyOnPlug;
+package com.dalexiv.yandextest.musicbrowser.notifyonplug;
 
 import android.app.Notification;
 import android.app.NotificationManager;

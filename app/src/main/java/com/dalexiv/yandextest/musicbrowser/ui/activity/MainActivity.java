@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.dalexiv.yandextest.musicbrowser.R;
 import com.dalexiv.yandextest.musicbrowser.di.ActivityInjectors;
 import com.dalexiv.yandextest.musicbrowser.net.DiskCache;
-import com.dalexiv.yandextest.musicbrowser.notifyOnPlug.HeadphonesPlugReceiver;
+import com.dalexiv.yandextest.musicbrowser.notifyonplug.HeadphonesPlugReceiver;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.FragmentAbout;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.PerformersFragment;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.SendEmailFragment;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentInteract
                 replaceMeWithFragment(SendEmailFragment.newInstance());
                 return true;
             case R.id.action_invalidate_caches:
-                cache.flush();
+                cache.clear();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentInteract
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         unregisterReceiver(receiver);
     }
 }

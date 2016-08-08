@@ -44,7 +44,6 @@ public class PerformersStringPresenter extends BaseStringPresenter<PerformersFra
     // Main subsription
     private Subscription netCall;
 
-
     @Override
     public void bindView(@NonNull PerformersFragment view) {
         super.bindView(view);

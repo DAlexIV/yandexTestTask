@@ -25,6 +25,8 @@ public class DiskCache {
     private static final String PERFORMERS_FILENAME = "performers.json";
     private static final Gson gson = new Gson();
     private final File file;
+    private Type listType = new TypeToken<ArrayList<Performer>>() {
+    }.getType();
 
     public DiskCache(Context context) {
         file = new File(context.getCacheDir(), PERFORMERS_FILENAME);
@@ -37,8 +39,7 @@ public class DiskCache {
             bos.flush();
             bos.close();
         } catch (IOException e) {
-            Log.e(TAG, "Saving to disk failed");
-            e.printStackTrace();
+            Log.e(TAG, "Saving to disk failed", e);
         }
     }
 
@@ -57,12 +58,10 @@ public class DiskCache {
         }
 
         String json = new String(bytes);
-        Type listType = new TypeToken<ArrayList<Performer>>() {
-        }.getType();
         return gson.fromJson(json, listType);
     }
 
-    public void flush() {
+    public void clear() {
         file.delete();
     }
 }

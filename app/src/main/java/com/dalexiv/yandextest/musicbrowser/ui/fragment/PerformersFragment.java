@@ -68,16 +68,16 @@ public class PerformersFragment extends Fragment implements IDisplayPerformers{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_performers, container, false);
-        initAnimationObservable();
-        unbinder = ButterKnife.bind(this, rootView);
-        presenter.bindView(this);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_performers, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initAnimationObservable();
+        unbinder = ButterKnife.bind(this, view);
+        presenter.bindView(this);
+
         // Refactor into interface
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
