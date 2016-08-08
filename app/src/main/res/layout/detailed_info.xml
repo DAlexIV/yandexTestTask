@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearContainer"
     android:layout_width="match_parent"
@@ -12,7 +10,7 @@
         android:id="@+id/perfGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/grey" />
 
     <TextView
@@ -20,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/grey" />
 
     <TextView
@@ -29,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/content_header"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black" />
 
     <TextView
@@ -37,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/black" />
 
     <TextView
@@ -46,7 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:autoLink="web"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black" />
-
 </LinearLayout>

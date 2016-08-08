@@ -7,5 +7,5 @@ import android.support.v4.app.Fragment;
  */
 
 public interface IFragmentInteraction {
-    public void replaceMeWithFragment(Fragment fragment);
+    void replaceMeWithFragment(Fragment fragment);
 }

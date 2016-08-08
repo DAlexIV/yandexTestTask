@@ -34,24 +34,21 @@ import rx.Observable;
  */
 
 public class PerformersFragment extends Fragment implements IDisplayPerformers{
-    private static final String TAG = PerformersFragment.class.getSimpleName();
-
     // Constants
     private static final long ANIMATION_DURATION = 750;
     private static final int NUMBER_OF_ANIMATED_ITEMS = 5;
 
     // Layout
     @BindView(R.id.recyclerPerfs)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
     @BindView(R.id.swipeRefresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
     private Unbinder unbinder;
 
-    private PerformersAdapter pAdapter;
+    private PerformersAdapter adapter;
 
     // Custom observable for better animation timings
-    private Observable<Long> custromInterval;
-
+    private Observable<Long> customInterval;
     private PerformersStringPresenter presenter;
 
     public static PerformersFragment newInstance() {
@@ -92,34 +89,35 @@ public class PerformersFragment extends Fragment implements IDisplayPerformers{
 
     private void setupSwipeToRefresh() {
         // Clearing old data and loading new one from network
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
            presenter.doSwipeToRefresh();
         });
 
-        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimary),
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimary),
                 Color.YELLOW, ContextCompat.getColor(getActivity(), R.color.colorAccent));
     }
 
     private void configureRecyclerViewAndAdapter() {
         // Initializing adapter
-        pAdapter = new PerformersAdapter(this, (performer, splitter)
+        adapter = new PerformersAdapter(this, (performer, splitter)
                 -> presenter.generateStats(performer, splitter));
 
         // Configuring recyclerview
-        RecyclerView.LayoutManager mLayoutManager
+        RecyclerView.LayoutManager layoutManager
                 = new LinearLayoutManager(getActivity().getApplicationContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new LandingAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new LandingAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST));
-        mRecyclerView.setAdapter(pAdapter);
+        recyclerView.setAdapter(adapter);
     }
 
     private void initAnimationObservable() {
         // Calculating animation values
         long ITEM_ANIMATION_DURATION = ANIMATION_DURATION / NUMBER_OF_ANIMATED_ITEMS;
 
-        custromInterval = Observable.interval(ITEM_ANIMATION_DURATION, TimeUnit.MILLISECONDS).flatMap(time -> {
+        customInterval = Observable.interval(ITEM_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
+                .flatMap(time -> {
             if (time < NUMBER_OF_ANIMATED_ITEMS) // Take first with animation interval
                 return Observable.just(time);
             else if (time == NUMBER_OF_ANIMATED_ITEMS) // Then emit others almost as one
@@ -134,34 +132,34 @@ public class PerformersFragment extends Fragment implements IDisplayPerformers{
         super.onDestroyView();
         presenter.unbindView(this);
         unbinder.unbind();
-        pAdapter = null;
+        adapter = null;
     }
 
     @Override
     public Observable<Long> getAnimationIntervalObservable() {
-        return custromInterval;
+        return customInterval;
     }
     @Override
     public void setRefreshing(boolean isRefreshing) {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.post(() -> {
-                if (mSwipeRefreshLayout != null)
-                    mSwipeRefreshLayout.setRefreshing(isRefreshing);
+        if (swipeRefreshLayout != null)
+            swipeRefreshLayout.post(() -> {
+                if (swipeRefreshLayout != null)
+                    swipeRefreshLayout.setRefreshing(isRefreshing);
             });
     }
 
     @Override
     public void notifyUser(String message) {
-        Snackbar.make(mRecyclerView, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void addPerformer(Performer performer) {
-        pAdapter.addPerformer(performer);
+        adapter.addPerformer(performer);
     }
 
     @Override
     public void clearPerformers() {
-        pAdapter.clearPerformers();
+        adapter.clearPerformers();
     }
 }

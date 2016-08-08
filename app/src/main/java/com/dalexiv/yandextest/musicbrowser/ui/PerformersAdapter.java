@@ -56,8 +56,7 @@ public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.Vi
             Bundle fragmentArgs = new Bundle();
             fragmentArgs.putParcelable("performer", dataset.get(viewHolder.getAdapterPosition()));
             detailedFragment.setArguments(fragmentArgs);
-            parentActivity
-                    .replaceMeWithFragment(detailedFragment);
+            parentActivity.replaceMeWithFragment(detailedFragment);
         });
 
         return viewHolder;

@@ -41,10 +41,12 @@ public class MainActivity extends AppCompatActivity implements IFragmentInteract
 
         ActivityInjectors.inject(this);
 
-        if (savedInstanceState == null)
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_frame_layout, PerformersFragment.newInstance())
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_frame_layout, PerformersFragment.newInstance(), "TAG")
                     .commit();
+        }
 
         receiver = new HeadphonesPlugReceiver();
     }
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentInteract
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                getSupportFragmentManager().popBackStack();
                 return true;
             case R.id.action_about:
                 replaceMeWithFragment(FragmentAbout.newInstance());
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentInteract
                 .replace(R.id.main_frame_layout, fragment)
                 .addToBackStack(null)
                 .commit();
+        getSupportFragmentManager().executePendingTransactions();
     }
 
     @Override

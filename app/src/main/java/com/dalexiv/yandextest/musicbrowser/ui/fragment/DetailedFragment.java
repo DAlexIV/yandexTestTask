@@ -28,23 +28,23 @@ import butterknife.Unbinder;
 public class DetailedFragment extends Fragment {
     // Layout
     @BindView(R.id.linearContainer)
-    LinearLayout mLinearLayout;
+    LinearLayout linearLayout;
     @BindView(R.id.imageView)
-    ImageView mImageArtist;
+    ImageView imageArtist;
     @BindView(R.id.perfGenre)
-    TextView mTextGenres;
+    TextView textGenres;
     @BindView(R.id.perfStats)
-    TextView mTextStats;
+    TextView textStats;
     @BindView(R.id.perfDesc)
-    TextView mTextDescription;
+    TextView textDescription;
     @BindView(R.id.perfLink)
-    TextView mTextLink;
-    Unbinder unbinder;
+    TextView textLink;
+    private Unbinder unbinder;
 
     // Current performer
-    Performer performer;
+    private Performer performer;
 
-    DetailedStringPresenter presenter;
+    private DetailedStringPresenter presenter;
 
     public static DetailedFragment newInstance() {
         return new DetailedFragment();
@@ -98,18 +98,18 @@ public class DetailedFragment extends Fragment {
         Picasso.with(getActivity())
                 .load(performer.getCover().getBig())
 //                .placeholder(R.drawable.placeholder)
-                .into(mImageArtist);
+                .into(imageArtist);
 
         // Setting various emailText views
-        mTextGenres.setText(presenter.generateGenres());
-        mTextStats.setText(presenter.generateStats());
-        mTextDescription.setText(presenter.generateDescription());
+        textGenres.setText(presenter.generateGenres());
+        textStats.setText(presenter.generateStats());
+        textDescription.setText(presenter.generateDescription());
 
         // Optional link
         if (performer.getLink() == null) {
-            mLinearLayout.removeView(mTextLink);
+            textLink.setVisibility(View.GONE);
         } else {
-            mTextLink.setText(presenter.generateLink());
+            textLink.setText(presenter.generateLink());
         }
     }
 

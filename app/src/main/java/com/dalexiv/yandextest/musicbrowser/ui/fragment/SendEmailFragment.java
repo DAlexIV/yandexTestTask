@@ -30,7 +30,7 @@ public class SendEmailFragment extends Fragment {
     Button submitButton;
     @BindView(R.id.email_edittext)
     EditText editText;
-    Unbinder unbinder;
+    private Unbinder unbinder;
 
     @State
     String emailText;
@@ -57,7 +57,7 @@ public class SendEmailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        // Configuring actionbar
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
         if (actionBar != null) {
@@ -68,17 +68,16 @@ public class SendEmailFragment extends Fragment {
             editText.setText(emailText);
         }
 
-        // Configuring actionbar
 
         RxView.clicks(submitButton)
                 .map(click -> editText.getText().toString())
                 .filter(text -> text.length() > 0)
                 .subscribe(text -> {
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.setType("message/rfc822");
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"dalexiv@yandex.ru"});
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Music browser");
-                    intent.putExtra(Intent.EXTRA_TEXT, text);
+                    Intent intent = new Intent(Intent.ACTION_SEND)
+                            .setType("message/rfc822")
+                            .putExtra(Intent.EXTRA_EMAIL, new String[]{"dalexiv@yandex.ru"})
+                            .putExtra(Intent.EXTRA_SUBJECT, "Music browser")
+                            .putExtra(Intent.EXTRA_TEXT, text);
                     startActivity(Intent.createChooser(intent, "Отправить письмо"));
                 });
     }
@@ -88,7 +87,6 @@ public class SendEmailFragment extends Fragment {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
     }
-
 
     @Override
     public void onDestroyView() {
