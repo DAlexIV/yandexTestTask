@@ -7,7 +7,6 @@ import android.util.Log;
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 import com.dalexiv.yandextest.musicbrowser.di.PresenterInjectors;
 import com.dalexiv.yandextest.musicbrowser.net.DiskCache;
-import com.dalexiv.yandextest.musicbrowser.net.IPerformer;
 import com.dalexiv.yandextest.musicbrowser.ui.fragment.PerformersFragment;
 
 import java.net.ConnectException;
@@ -34,8 +33,6 @@ public class PerformersStringPresenter extends BaseStringPresenter<PerformersFra
 
     // Current list of performers in adapter
     @Inject
-    IPerformer iPerformer;
-    @Inject
     DiskCache cache;
 
     // Observable with cache
@@ -57,38 +54,42 @@ public class PerformersStringPresenter extends BaseStringPresenter<PerformersFra
     }
 
     private void loadFromCacheAndNetwork() {
-        // Show that we are loading smthing
-        view().setRefreshing(true);
+        // TODO make a db call
 
-        // Rx magic goes there
-        final Observable<Performer> loadingObservable = Observable.zip(
-                Observable.concat(cacheObservable,
-                        iPerformer.getPerformers()
-                                .doOnNext(performers -> cache.saveToDisk(performers)))
-                        .first()
-                        .flatMap(Observable::from),
-                view().getAnimationIntervalObservable(),
-                (data, delay) -> data);
-
-        netCall = applySchedulers(loadingObservable)
-                .subscribe(showResultObserver);
+//        // Show that we are loading smthing
+//        view().setRefreshing(true);
+//
+//        // Rx magic goes there
+//        final Observable<Performer> loadingObservable = Observable.zip(
+//                Observable.concat(cacheObservable,
+//                        iPerformer.getPerformers()
+//                                .doOnNext(performers -> cache.saveToDisk(performers)))
+//                        .first()
+//                        .flatMap(Observable::from),
+//                view().getAnimationIntervalObservable(),
+//                (data, delay) -> data);
+//
+//        netCall = applySchedulers(loadingObservable)
+//                .subscribe(showResultObserver);
     }
 
     private void loadFromNetworkOnly() {
-        // Show that we are loading smthing
-        view().setRefreshing(true);
-
-        // Another sort of Rx magic (without cache)
-        Observable<Performer> loadingObservable =
-                Observable.zip(
-                        iPerformer.getPerformers()
-                                .doOnNext(performers -> cache.saveToDisk(performers))
-                                .flatMap(Observable::from),
-                        view().getAnimationIntervalObservable(),
-                        (data, delay) -> data);
-
-        netCall = applySchedulers(loadingObservable)
-                .subscribe(showResultObserver);
+        // TODO make a db call
+//
+//        // Show that we are loading smthing
+//        view().setRefreshing(true);
+//
+//        // Another sort of Rx magic (without cache)
+//        Observable<Performer> loadingObservable =
+//                Observable.zip(
+//                        iPerformer.getPerformers()
+//                                .doOnNext(performers -> cache.saveToDisk(performers))
+//                                .flatMap(Observable::from),
+//                        view().getAnimationIntervalObservable(),
+//                        (data, delay) -> data);
+//
+//        netCall = applySchedulers(loadingObservable)
+//                .subscribe(showResultObserver);
     }
 
     private Observable<Performer> applySchedulers(Observable<Performer> observable) {

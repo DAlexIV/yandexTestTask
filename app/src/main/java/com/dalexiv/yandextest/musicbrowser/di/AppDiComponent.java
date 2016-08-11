@@ -13,7 +13,8 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {NetModule.class, CacheModule.class})
+@Component(modules = {AndroidModule.class,
+        CacheModule.class})
 public interface AppDiComponent {
     void inject(PerformersStringPresenter presenter);
 

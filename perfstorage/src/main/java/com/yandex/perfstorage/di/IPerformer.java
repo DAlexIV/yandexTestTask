@@ -1,6 +1,6 @@
-package com.dalexiv.yandextest.musicbrowser.net;
+package com.yandex.perfstorage.di;
 
-import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
+import com.yandex.perfstorage.dataModel.Performer;
 
 import java.util.ArrayList;
 

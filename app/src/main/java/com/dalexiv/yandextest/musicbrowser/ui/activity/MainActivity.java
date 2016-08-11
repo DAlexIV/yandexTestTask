@@ -2,6 +2,7 @@ package com.dalexiv.yandextest.musicbrowser.ui.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentInteract
     DiskCache cache;
     private HeadphonesPlugReceiver receiver;
 
+    private static final Uri CONTENT_URI
+            = Uri.parse("content://com.yandex.perfstorage/main.sqlite/1");
+
     @Override
     protected void onResume() {
         registerReceiver(receiver,
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentInteract
         }
 
         receiver = new HeadphonesPlugReceiver();
+        getContentResolver().query(CONTENT_URI, null, null, null, null);
     }
 
 

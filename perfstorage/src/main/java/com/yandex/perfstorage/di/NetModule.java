@@ -1,6 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser.di;
-
-import com.dalexiv.yandextest.musicbrowser.net.IPerformer;
+package com.yandex.perfstorage.di;
 
 import javax.inject.Singleton;
 

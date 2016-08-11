@@ -6,6 +6,7 @@ import android.content.Context;
 import com.dalexiv.yandextest.musicbrowser.di.AndroidModule;
 import com.dalexiv.yandextest.musicbrowser.di.AppDiComponent;
 import com.dalexiv.yandextest.musicbrowser.di.DaggerAppDiComponent;
+import com.facebook.stetho.Stetho;
 
 /**
  * Created by dalexiv on 7/17/16.
@@ -17,6 +18,8 @@ public class MusicBrowserApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Stetho.initializeWithDefaults(this);
+
         component = DaggerAppDiComponent
                 .builder()
                 .androidModule(new AndroidModule(this))

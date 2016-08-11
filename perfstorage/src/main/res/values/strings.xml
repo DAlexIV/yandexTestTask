@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PerfStorage</string>
+    <string name="main_label">Content provider app, go to main app to see performers</string>
+</resources>

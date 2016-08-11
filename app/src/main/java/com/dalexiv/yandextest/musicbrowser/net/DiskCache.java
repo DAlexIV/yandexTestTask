@@ -25,10 +25,11 @@ public class DiskCache {
     private static final String PERFORMERS_FILENAME = "performers.json";
     private static final Gson gson = new Gson();
     private final File file;
-    private Type listType = new TypeToken<ArrayList<Performer>>() {
-    }.getType();
+    private Type listType;
 
     public DiskCache(Context context) {
+        listType = new TypeToken<ArrayList<Performer>>() {
+        }.getType();
         file = new File(context.getCacheDir(), PERFORMERS_FILENAME);
     }
 
