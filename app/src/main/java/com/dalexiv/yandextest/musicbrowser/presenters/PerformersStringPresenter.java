@@ -138,6 +138,7 @@ public class PerformersStringPresenter extends BaseStringPresenter<PerformersFra
 
     public void doSwipeToRefresh() {
         view().clearPerformers();
+        view().setRefreshing(false);
 //        loadFromNetworkOnly();
     }
 

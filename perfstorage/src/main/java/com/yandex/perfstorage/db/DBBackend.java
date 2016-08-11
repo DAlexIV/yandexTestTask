@@ -34,7 +34,7 @@ public class DBBackend {
                 DBContract.Performers.ID,
                 DBContract.Performers.PERFORMER_NAME,
                 "GROUP_CONCAT(" + DBContract.GENRES + "."
-                        + DBContract.Genres.ID + ") AS " + DBContract.GROUPED_GENRES,
+                        + DBContract.Genres.GENRE_NAME + ") AS " + DBContract.GROUPED_GENRES,
                 DBContract.Performers.ALBUMS,
                 DBContract.Performers.TRACKS,
                 DBContract.Performers.LINK,
@@ -60,10 +60,10 @@ public class DBBackend {
     }
 
     private long insertOnlyGenre(SQLiteDatabase db, String genre) {
+        // TODO refactor into android style
         ContentValues values = new ContentValues();
         values.put(DBContract.Genres.GENRE_NAME, genre);
-        return db.insertWithOnConflict(DBContract.GENRES, null, values,
-                SQLiteDatabase.CONFLICT_REPLACE);
+        return db.insertWithOnConflict(DBContract.GENRES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     private long insertOnlyPerformer(SQLiteDatabase db, Performer performer) {
