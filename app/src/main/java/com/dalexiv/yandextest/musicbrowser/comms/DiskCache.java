@@ -1,4 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser.net;
+package com.dalexiv.yandextest.musicbrowser.comms;
 
 import android.content.Context;
 import android.util.Log;
@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dalexiv on 7/18/16.
@@ -33,7 +34,7 @@ public class DiskCache {
         file = new File(context.getCacheDir(), PERFORMERS_FILENAME);
     }
 
-    public void saveToDisk(ArrayList<Performer> listForSave) {
+    public void saveToDisk(List<Performer> listForSave) {
         try {
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
             bos.write(gson.toJson(listForSave).getBytes());

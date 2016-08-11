@@ -16,6 +16,11 @@ public class Cover implements Parcelable {
     public Cover() {
     }
 
+    public Cover(String small, String big) {
+        this.small = small;
+        this.big = big;
+    }
+
     protected Cover(Parcel in) {
         small = in.readString();
         big = in.readString();

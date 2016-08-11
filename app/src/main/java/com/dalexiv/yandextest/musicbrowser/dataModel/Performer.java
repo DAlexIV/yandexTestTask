@@ -12,7 +12,7 @@ import android.os.Parcelable;
 public class Performer implements Parcelable{
     private int id;
     private String name;
-    private String[] genres;
+    private String genres;
     private int tracks;
     private int albums;
     private String link;
@@ -22,10 +22,22 @@ public class Performer implements Parcelable{
     public Performer() {
     }
 
+    public Performer(int id, String name, String genres, int tracks,
+                     int albums, String link, String description, Cover cover) {
+        this.id = id;
+        this.name = name;
+        this.genres = genres;
+        this.tracks = tracks;
+        this.albums = albums;
+        this.link = link;
+        this.description = description;
+        this.cover = cover;
+    }
+
     protected Performer(Parcel in) {
         id = in.readInt();
         name = in.readString();
-        genres = in.createStringArray();
+        genres = in.readString();
         tracks = in.readInt();
         albums = in.readInt();
         link = in.readString();
@@ -49,11 +61,11 @@ public class Performer implements Parcelable{
         this.name = name;
     }
 
-    public String[] getGenres() {
+    public String getGenres() {
         return genres;
     }
 
-    public void setGenres(String[] genres) {
+    public void setGenres(String genres) {
         this.genres = genres;
     }
 
@@ -106,7 +118,7 @@ public class Performer implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(name);
-        dest.writeStringArray(genres);
+        dest.writeString(genres);
         dest.writeInt(tracks);
         dest.writeInt(albums);
         dest.writeString(link);

@@ -23,13 +23,22 @@ public class DBBackend {
     }
 
     public Cursor getAllPerformers(SQLiteDatabase db) {
-        String joinQuery = DBContract.PERFORMERS;
-        String[] columns = new String[]{ DBContract.Performers.ID,
+        String joinQuery = DBContract.PERFORMERS + " LEFT JOIN " + DBContract.PERFORMERS_GENRE
+                + " ON " + DBContract.PERFORMERS + "." + DBContract.Performers.ID + "="
+                + DBContract.PERFORMERS_GENRE + "." + DBContract.PerformersGenres.PERFORMERS
+                + " INNER JOIN " + DBContract.GENRES
+                + " ON " + DBContract.PERFORMERS_GENRE + "." + DBContract.PerformersGenres.GENRE + "="
+                + DBContract.GENRES + "." + DBContract.Genres.ID
+                + " GROUP BY " + DBContract.Performers.ID;
+        String[] columns = new String[]{
+                DBContract.Performers.ID,
                 DBContract.Performers.PERFORMER_NAME,
-                DBContract.Performers.TRACKS,
+                "GROUP_CONCAT(" + DBContract.GENRES + "."
+                        + DBContract.Genres.ID + ") AS " + DBContract.GROUPED_GENRES,
                 DBContract.Performers.ALBUMS,
-                DBContract.Performers.DESCRIPTION,
+                DBContract.Performers.TRACKS,
                 DBContract.Performers.LINK,
+                DBContract.Performers.DESCRIPTION,
                 DBContract.Performers.COVER_SMALL,
                 DBContract.Performers.COVER_BIG};
         return db.query(joinQuery, columns, null, null, null, null, null);

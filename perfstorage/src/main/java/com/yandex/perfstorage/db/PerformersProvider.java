@@ -75,8 +75,6 @@ public class PerformersProvider extends ContentProvider {
         return backend.getAllPerformers(database.getReadableDatabase());
     }
 
-    private void downloadPerformers() {
-    }
 
     @Nullable
     @Override

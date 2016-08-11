@@ -18,7 +18,6 @@ public class MusicBrowserApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Stetho.initializeWithDefaults(this);
 
         component = DaggerAppDiComponent
                 .builder()

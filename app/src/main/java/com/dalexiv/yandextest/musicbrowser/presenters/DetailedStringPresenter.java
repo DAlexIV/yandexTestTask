@@ -1,11 +1,9 @@
 package com.dalexiv.yandextest.musicbrowser.presenters;
 
-import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
-
-import java.util.Arrays;
 
 /**
  * Created by dalexiv on 4/24/16.
@@ -22,7 +20,7 @@ public class DetailedStringPresenter extends BaseStringPresenter {
     }
 
     public String generateGenres() {
-        return Arrays.toString(performer.getGenres()).replaceAll("[\\[\\]]", "");
+        return performer.getGenres();
     }
 
     public String generateStats() {

@@ -2,7 +2,7 @@ package com.dalexiv.yandextest.musicbrowser.di;
 
 import android.content.Context;
 
-import com.dalexiv.yandextest.musicbrowser.net.DiskCache;
+import com.dalexiv.yandextest.musicbrowser.comms.DiskCache;
 
 import javax.inject.Singleton;
 

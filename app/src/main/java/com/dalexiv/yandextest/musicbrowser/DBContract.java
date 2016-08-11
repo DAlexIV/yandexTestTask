@@ -1,4 +1,4 @@
-package com.yandex.perfstorage.db;
+package com.dalexiv.yandextest.musicbrowser;
 
 /**
  * Created by dalexiv on 8/10/16.

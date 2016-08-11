@@ -16,7 +16,6 @@ import com.dalexiv.yandextest.musicbrowser.ui.fragment.DetailedFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
@@ -75,7 +74,7 @@ public class PerformersAdapter extends RecyclerView.Adapter<PerformersAdapter.Vi
 
         // Setting various text fields
         holder.mTextViewName.setText(performer.getName());
-        holder.mTextViewGenre.setText(Arrays.toString(performer.getGenres()).replaceAll("[\\[\\]]", ""));
+        holder.mTextViewGenre.setText(performer.getGenres());
         holder.mTextViewStats.setText(iGenerateStats.generateStats(performer, ", "));
     }
 
