@@ -1,4 +1,4 @@
-package com.dalexiv.yandextest.musicbrowser.retro;
+package com.dalexiv.yandextest.musicbrowser.net;
 
 import com.dalexiv.yandextest.musicbrowser.dataModel.Performer;
 

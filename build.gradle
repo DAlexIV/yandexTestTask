@@ -3,10 +3,13 @@
 buildscript {
     repositories {
         jcenter()
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0'
+        classpath 'com.android.tools.build:gradle:2.2.0-alpha6'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.5'
 
 
         // NOTE: Do not place your application dependencies here; they belong

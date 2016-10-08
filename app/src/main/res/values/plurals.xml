@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="albums">
+        <item quantity="one">альбом</item>
+        <item quantity="two">альбома</item>
+        <item quantity="few">альбома</item>
+        <item quantity="other">альбомов</item>
+    </plurals>
+
+    <plurals name="tracks">
+        <item quantity="one">песня</item>
+        <item quantity="two">песни</item>
+        <item quantity="few">песни</item>
+        <item quantity="other">песен</item>
+    </plurals>
+</resources>

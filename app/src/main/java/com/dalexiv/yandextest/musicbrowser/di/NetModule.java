@@ -1,5 +1,11 @@
-package com.dalexiv.yandextest.musicbrowser.retro;
+package com.dalexiv.yandextest.musicbrowser.di;
 
+import com.dalexiv.yandextest.musicbrowser.net.IPerformer;
+
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.GsonConverterFactory;
@@ -13,25 +19,35 @@ import retrofit2.RxJavaCallAdapterFactory;
 /*
     Singleton, which initializes and holds retrofit object throughout entire app
  */
-public class RetrofitHolder {
-    private static volatile Retrofit retro;
+@Module
+public class NetModule {
+    private static final String API_URL = "http://download.cdn.yandex.net/mobilization-2016/";
 
-    static {
+    @Provides
+    @Singleton
+    OkHttpClient providetOkHttpClient() {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        return new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
                 .build();
-        retro = new Retrofit.Builder()
+    }
+
+    @Provides
+    @Singleton
+    Retrofit provideRetrofit(OkHttpClient okHttpClient) {
+        return new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl("http://download.cdn.yandex.net/mobilization-2016/")
+                .baseUrl(API_URL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 
-    public static Retrofit getRetrofit() {
-        return retro;
+    @Provides
+    @Singleton
+    IPerformer providePerformers(Retrofit retro) {
+        return retro.create(IPerformer.class);
     }
 }
 

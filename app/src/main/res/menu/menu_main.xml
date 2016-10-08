@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:fragment=".ui.activity.MainActivity">
+
+    <item
+        android:id="@+id/action_send_email"
+        android:title="@string/send_email_text"
+        android:icon="@drawable/ic_mail_outline_black_24px"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/about_menu_text"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_invalidate_caches"
+        android:title="@string/invalidate_caches"
+        android:visible="true"
+        app:showAsAction="never" />
+</menu>
