@@ -11,5 +11,6 @@ Contains
 
 Also task implemented with Retrofi2, RxJava and Picasso
 
-![alt tag](https://www.dropbox.com/s/d0jl6305pr3v7nv/Screenshot_20160425-205254.png?dl=1)
-![alt tag](https://www.dropbox.com/s/ujj5s717vh8937u/Screenshot_20160425-205305.png?dl=1)
+<img src="https://www.dropbox.com/s/d0jl6305pr3v7nv/Screenshot_20160425-205254.png?dl=1"  width="480">
+<img src="https://www.dropbox.com/s/ujj5s717vh8937u/Screenshot_20160425-205305.png?dl=1"  width="480">
+
